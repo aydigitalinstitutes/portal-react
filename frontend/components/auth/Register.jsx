@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaEnvelope, FaLock, FaUser, FaPhone } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { coursesData } from '../../data/courses';
+import AnimatedButton from '../common/AnimatedButton';
+import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -66,21 +69,49 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white p-8 rounded-xl shadow-xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
-            <p className="mt-2 text-gray-600">Sign up to get started</p>
-          </div>
+      <motion.div
+        className="max-w-md w-full space-y-8"
+        initial="initial"
+        animate="animate"
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="bg-white p-8 rounded-xl shadow-xl"
+          variants={scaleIn}
+          whileHover={{ scale: 1.02, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+          transition={{ type: 'spring', stiffness: 300 }}
+        >
+          <motion.div className="text-center mb-8" variants={staggerItem}>
+            <motion.h2
+              className="text-3xl font-bold text-gray-900"
+              variants={fadeInUp}
+            >
+              Create Account
+            </motion.h2>
+            <motion.p
+              className="mt-2 text-gray-600"
+              variants={fadeInUp}
+              transition={{ delay: 0.1 }}
+            >
+              Sign up to get started
+            </motion.p>
+          </motion.div>
 
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+          <motion.form onSubmit={handleSubmit} className="space-y-4" variants={staggerContainer}>
+            <motion.div variants={staggerItem}>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
               </label>
@@ -88,21 +119,34 @@ const Register = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FaUser className="text-gray-400" />
                 </div>
-                <input
+                <motion.input
                   id="name"
                   name="name"
                   type="text"
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className={`block w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none ${
+                  className={`block w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all ${
                     errors.name ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="Enter your full name"
+                  whileFocus={{ scale: 1.02, borderColor: errors.name ? '#ef4444' : '#3b82f6' }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                 />
               </div>
-              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-            </div>
+              <AnimatePresence>
+                {errors.name && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    className="mt-1 text-sm text-red-600"
+                  >
+                    {errors.name}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -216,25 +260,32 @@ const Register = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Creating account...' : 'Sign Up'}
-            </button>
-          </form>
+            <motion.div variants={staggerItem}>
+              <AnimatedButton
+                type="submit"
+                variant="primary"
+                disabled={loading}
+                loading={loading}
+                className="w-full py-3 text-lg"
+              >
+                Sign Up
+              </AnimatedButton>
+            </motion.div>
+          </motion.form>
 
-          <div className="mt-6 text-center">
+          <motion.div className="mt-6 text-center" variants={staggerItem}>
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
+              <Link
+                to="/login"
+                className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+              >
                 Sign in
               </Link>
             </p>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

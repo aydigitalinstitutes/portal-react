@@ -19,13 +19,12 @@ const Courses = () => {
         {/* Course Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {coursesData.map((course, index) => (
-            <div
+            <CourseCard
               key={course.id}
-              className="scroll-animate"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <CourseCard course={course} getIcon={getIconComponent} />
-            </div>
+              course={course}
+              getIcon={getIconComponent}
+              index={index}
+            />
           ))}
         </div>
 

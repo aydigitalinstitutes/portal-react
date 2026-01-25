@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import AnimatedButton from '../common/AnimatedButton';
+import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -39,21 +43,49 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white p-8 rounded-xl shadow-xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-            <p className="mt-2 text-gray-600">Sign in to your account</p>
-          </div>
+      <motion.div
+        className="max-w-md w-full space-y-8"
+        initial="initial"
+        animate="animate"
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="bg-white p-8 rounded-xl shadow-xl"
+          variants={scaleIn}
+          whileHover={{ scale: 1.02, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
+          transition={{ type: 'spring', stiffness: 300 }}
+        >
+          <motion.div className="text-center mb-8" variants={staggerItem}>
+            <motion.h2
+              className="text-3xl font-bold text-gray-900"
+              variants={fadeInUp}
+            >
+              Welcome Back
+            </motion.h2>
+            <motion.p
+              className="mt-2 text-gray-600"
+              variants={fadeInUp}
+              transition={{ delay: 0.1 }}
+            >
+              Sign in to your account
+            </motion.p>
+          </motion.div>
 
-          {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg"
+              >
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+          <motion.form onSubmit={handleSubmit} className="space-y-6" variants={staggerContainer}>
+            <motion.div variants={staggerItem}>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
@@ -61,7 +93,7 @@ const Login = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FaEnvelope className="text-gray-400" />
                 </div>
-                <input
+                <motion.input
                   id="email"
                   name="email"
                   type="email"
@@ -69,13 +101,15 @@ const Login = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                   placeholder="Enter your email"
+                  whileFocus={{ scale: 1.02, borderColor: '#3b82f6' }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div variants={staggerItem}>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
@@ -83,7 +117,7 @@ const Login = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FaLock className="text-gray-400" />
                 </div>
-                <input
+                <motion.input
                   id="password"
                   name="password"
                   type="password"
@@ -91,11 +125,13 @@ const Login = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                   placeholder="Enter your password"
+                  whileFocus={{ scale: 1.02, borderColor: '#3b82f6' }}
+                  transition={{ type: 'spring', stiffness: 300 }}
                 />
               </div>
-            </div>
+            </motion.div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -117,25 +153,32 @@ const Login = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
+            <motion.div variants={staggerItem}>
+              <AnimatedButton
+                type="submit"
+                variant="primary"
+                disabled={loading}
+                loading={loading}
+                className="w-full py-3 text-lg"
+              >
+                Sign In
+              </AnimatedButton>
+            </motion.div>
+          </motion.form>
 
-          <div className="mt-6 text-center">
+          <motion.div className="mt-6 text-center" variants={staggerItem}>
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
+              <Link
+                to="/register"
+                className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+              >
                 Sign up
               </Link>
             </p>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
