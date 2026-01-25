@@ -15,8 +15,8 @@ on:
   push:
     branches: [ main, master ]
     paths:
-      - 'backend/models/**'
-      - 'backend/config/database.js'
+      - 'backend/prisma/**'
+      - 'backend/prisma.config.ts'
 
 jobs:
   migrate:
@@ -52,21 +52,12 @@ jobs:
         env:
           PGPASSWORD: postgres
       
-      - name: Run migrations
+      - name: Apply Prisma schema
         run: |
-          npm run dev &
-          sleep 10
-          # Sequelize will auto-sync in development mode
-          # In production, you would use migrations
-          pkill -f "node.*server.js" || true
+          npx prisma db push
         env:
           NODE_ENV: ${{ github.event.inputs.environment || 'development' }}
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: aydigital
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aydigital?schema=public
       
       - name: Verify migration
         run: |

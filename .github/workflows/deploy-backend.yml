@@ -47,18 +47,19 @@ jobs:
         continue-on-error: true
       
       - name: Build application
-        run: |
-          echo "Backend is ready for deployment"
-          # For Node.js apps, you might not need a build step
-          # But you can add any pre-deployment steps here
+        run: npm run build
       
       - name: Create deployment package
         run: |
           mkdir -p deploy
-          cp -r *.js config models routes middleware utils deploy/
+          cp -r dist deploy/
+          cp -r prisma deploy/
+          cp prisma.config.ts deploy/
           cp package.json deploy/
-          cp package-lock.json deploy/ || true
-          cd deploy && npm install --production
+          cp package-lock.json deploy/
+          cd deploy
+          npm ci --omit=dev
+          npx prisma generate
           tar -czf ../backend-deploy.tar.gz .
       
       - name: Upload deployment package

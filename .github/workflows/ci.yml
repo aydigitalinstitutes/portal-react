@@ -33,7 +33,7 @@ jobs:
       - name: Build frontend
         run: npm run build
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL || 'http://localhost:5000/api' }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'http://localhost:5001/api' }}
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -79,38 +79,66 @@ jobs:
       
       - name: Install dependencies
         run: npm install
-      
-      - name: Run database migrations
-        run: |
-          # Create test database (ignore error if it already exists)
-          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE aydigital_test;" || true
-        env:
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: aydigital_test
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-      
-      - name: Test database connection
-        run: |
-          npm run dev &
-          sleep 5
-          curl http://localhost:5000/api/health || exit 1
+
+      - name: Build backend
+        run: npm run build
         env:
           NODE_ENV: test
-          PORT: 5000
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: aydigital_test
-          DB_USER: postgres
-          DB_PASSWORD: postgres
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aydigital_test?schema=public
           JWT_SECRET: test-secret-key
+          REFRESH_TOKEN_SECRET: test-refresh-secret
+
+      - name: Smoke test health endpoint
+        run: |
+          node dist/src/server.js &
+          sleep 5
+          curl http://localhost:5001/api/health || exit 1
+        env:
+          NODE_ENV: test
+          PORT: 5001
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aydigital_test?schema=public
+          JWT_SECRET: test-secret-key
+          REFRESH_TOKEN_SECRET: test-refresh-secret
+
+  api:
+    name: NestJS API Test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prisma generate
+        run: npm run prisma:generate
+
+      - name: Run unit tests with coverage
+        run: npm run test:cov
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+
+      - name: Build
+        run: npm run build
 
   # Deploy to Vercel (Frontend)
   deploy-frontend:
     name: Deploy Frontend to Vercel
     runs-on: ubuntu-latest
-    needs: [frontend, backend]
+    needs: [frontend, backend, api]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
     steps:
