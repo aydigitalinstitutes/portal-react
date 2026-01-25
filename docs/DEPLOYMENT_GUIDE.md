@@ -76,13 +76,12 @@ vercel --prod
    ```
 
 3. **Set Environment Variables in Railway:**
-   - `PORT=5000`
-   - `DB_HOST=your-db-host`
-   - `DB_PORT=5432`
-   - `DB_NAME=aydigital`
-   - `DB_USER=your-db-user`
-   - `DB_PASSWORD=your-db-password`
+   - `PORT=5001`
+   - `DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&sslmode=require`
    - `JWT_SECRET=your-jwt-secret`
+   - `REFRESH_TOKEN_SECRET=your-refresh-secret`
+   - `FRONTEND_URL=https://your-frontend-domain`
+   - `API_BASE_URL=https://your-backend-domain`
    - `NODE_ENV=production`
 
 #### Option 2: Render
@@ -120,12 +119,11 @@ vercel --prod
 
 3. **Set Environment Variables:**
    ```bash
-   heroku config:set DB_HOST=your-host
-   heroku config:set DB_PORT=5432
-   heroku config:set DB_NAME=aydigital
-   heroku config:set DB_USER=your-user
-   heroku config:set DB_PASSWORD=your-password
+   heroku config:set DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&sslmode=require
    heroku config:set JWT_SECRET=your-secret
+   heroku config:set REFRESH_TOKEN_SECRET=your-refresh-secret
+   heroku config:set FRONTEND_URL=https://your-frontend-domain
+   heroku config:set API_BASE_URL=https://your-backend-domain
    heroku config:set NODE_ENV=production
    ```
 
@@ -155,13 +153,12 @@ VITE_API_URL=https://your-backend-api.com/api
 
 ### Backend (.env)
 ```env
-PORT=5000
-DB_HOST=your-db-host
-DB_PORT=5432
-DB_NAME=aydigital
-DB_USER=your-db-user
-DB_PASSWORD=your-db-password
+PORT=5001
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&sslmode=require
 JWT_SECRET=your-jwt-secret
+REFRESH_TOKEN_SECRET=your-refresh-secret
+FRONTEND_URL=https://your-frontend-domain
+API_BASE_URL=https://your-backend-domain
 NODE_ENV=production
 ```
 

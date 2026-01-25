@@ -1,28 +1,17 @@
-# Database Setup Complete ✅
+# Database Setup
 
-Your PostgreSQL database has been configured with Neon.
+This project uses PostgreSQL via a single `DATABASE_URL` connection string.
 
 ## Configuration Summary
 
 ### Database Details
-- **Provider**: Neon (Serverless PostgreSQL)
-- **Host**: `ep-orange-mode-ahazf6eq-pooler.c-3.us-east-1.aws.neon.tech`
-- **Port**: `5432`
-- **Database**: `neondb`
-- **User**: `neondb_owner`
-- **SSL**: Required (configured)
+- **Provider**: PostgreSQL (Neon/AWS/RDS/local are all supported)
+- **SSL**: Required for managed providers (e.g., Neon)
 
 ### What Was Done
 
-1. ✅ **Backend `.env` file created** with Neon credentials
-2. ✅ **Database config updated** to support SSL connections
-3. ✅ **GitHub Secrets set** for CI/CD workflows:
-   - `DB_HOST`
-   - `DB_PORT`
-   - `DB_NAME`
-   - `DB_USER`
-   - `DB_PASSWORD`
-   - `JWT_SECRET`
+1. ✅ **Backend uses Prisma** with `DATABASE_URL`
+2. ✅ **GitHub Secrets** should store `DATABASE_URL` and JWT secrets
 
 ## Testing the Connection
 
@@ -38,12 +27,7 @@ Your PostgreSQL database has been configured with Neon.
    npm run dev
    ```
 
-3. You should see:
-   ```
-   PostgreSQL connection established successfully.
-   Database models synchronized.
-   Server is running on port 5000
-   ```
+3. You should see a Prisma connection message and the server running.
 
 ### If Connection Fails
 
@@ -61,7 +45,7 @@ Your PostgreSQL database has been configured with Neon.
 
 2. **Create your first user** via the registration endpoint:
    ```bash
-   POST http://localhost:5000/api/auth/register
+   POST http://localhost:5001/api/auth/register
    ```
 
 3. **Set up remaining GitHub secrets** (if deploying):
@@ -72,8 +56,7 @@ Your PostgreSQL database has been configured with Neon.
 
 ## Database Tables
 
-Tables will be automatically created by Sequelize when you first run the backend:
-- `users` - User accounts and authentication
+Tables are managed by Prisma. Apply schema changes using `prisma db push` (or migrations if you introduce them).
 
 ## Security Notes
 
@@ -86,5 +69,5 @@ Tables will be automatically created by Sequelize when you first run the backend
 
 If you need the connection string elsewhere:
 ```
-postgresql://neondb_owner:npg_8QT2eoEJNxmi@ep-orange-mode-ahazf6eq-pooler.c-3.us-east-1.aws.neon.tech:5432/neondb?sslmode=require
+postgresql://USER:PASSWORD@HOST:5432/DBNAME?sslmode=require
 ```

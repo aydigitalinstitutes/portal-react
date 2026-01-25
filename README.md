@@ -1,24 +1,21 @@
-# AY Digital Institute - Full Stack Application
+# AY Digital Institute
 
-A complete full-stack application for AY Digital Institute with React frontend and Node.js/Express backend.
+Full-stack repo containing:
+- Public website (Vite + React)
+- Admin dashboard (Vite + React)
+- Backend APIs (Express + Prisma, and a separate NestJS API)
 
 ## Project Structure
 
 ```
 aydigital/
-├── frontend/          # React frontend application
-│   ├── components/   # React components
-│   ├── pages/        # Page components
-│   ├── context/      # React context (Auth)
-│   ├── data/        # Static data
-│   └── utils/        # Utility functions
-├── backend/          # Node.js/Express backend
-│   ├── config/      # Configuration files
-│   ├── models/      # Database models
-│   ├── routes/      # API routes
-│   ├── middleware/  # Express middleware
-│   └── utils/        # Utility functions
-└── package.json      # Frontend dependencies
+├── src/              # Public website source (Vite entry: src/main.jsx)
+├── admin/            # Admin frontend (Vite)
+├── backend/           # Express API (Prisma)
+├── api/              # NestJS API (Prisma + Redis + JWT + OAuth)
+├── docs/             # Documentation
+├── nginx/            # Reverse proxy example config
+└── docker-compose.yml
 ```
 
 ## Features
@@ -43,16 +40,16 @@ aydigital/
 
 ## Setup Instructions
 
-### Frontend Setup
+### Public Website (root)
 
 1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Create `.env` file in `frontend/`:
+2. Create `.env` file in repo root:
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5001/api
 ```
 
 3. Start development server:
@@ -60,7 +57,7 @@ VITE_API_URL=http://localhost:5000/api
 npm run dev
 ```
 
-### Backend Setup
+### Express Backend (`backend/`)
 
 1. Navigate to backend folder:
 ```bash
@@ -77,17 +74,7 @@ npm install
 cp .env.example .env
 ```
 
-4. Update `.env` with your configuration:
-```env
-PORT=5000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=aydigital
-DB_USER=postgres
-DB_PASSWORD=postgres
-JWT_SECRET=your-secret-key-here
-NODE_ENV=development
-```
+4. Create `.env` from example and set `DATABASE_URL` and JWT secrets.
 
 5. Create PostgreSQL database:
 ```sql
@@ -105,13 +92,21 @@ npm start
 
 ## API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
+### Express Auth
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
+- `GET /api/auth/me`
 
-### User (Protected)
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
+### Admin (Express)
+- `GET /api/admin/stats`
+- `GET /api/admin/users`
+- `PATCH /api/admin/users/:id`
+
+### NestJS API
+- Versioned under `/api/v1/*`
+- Health and metrics: `GET /health`, `GET /metrics`
 
 ## Frontend Routes
 
@@ -132,10 +127,9 @@ npm start
 ### Backend
 - Node.js
 - Express.js
-- PostgreSQL (Sequelize ORM)
+- PostgreSQL (Prisma ORM)
 - JWT (jsonwebtoken)
 - bcryptjs
-- express-validator
 
 ## Development
 
@@ -175,12 +169,12 @@ Go to your repository → Settings → Secrets and variables → Actions, and ad
 - `VITE_API_URL` - Production API URL
 
 **Backend/Database:**
-- `DB_HOST` - PostgreSQL host
-- `DB_PORT` - PostgreSQL port (usually 5432)
-- `DB_NAME` - Database name
-- `DB_USER` - Database username
-- `DB_PASSWORD` - Database password
-- `JWT_SECRET` - JWT secret key
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - Access token signing secret
+- `REFRESH_TOKEN_SECRET` - Refresh token signing secret
+
+**Database Backup (Optional):**
+- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
 
 See `.github/README.md` for detailed workflow documentation.
 

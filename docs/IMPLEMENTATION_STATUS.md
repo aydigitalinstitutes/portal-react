@@ -29,7 +29,7 @@
 
 ### Backend
 - [ ] Update auth routes with refresh token system
-- [ ] Migrate from Sequelize to Prisma
+- [x] Migrated from Sequelize to Prisma (legacy removed)
 - [ ] Add http-only cookie support
 - [ ] Implement OAuth routes
 
@@ -74,8 +74,8 @@
 - `backend/tsconfig.json` - TypeScript config
 
 ### Frontend
-- `frontend/src/lib/zod-schemas.ts` - Validation schemas
-- `frontend/src/lib/axios.ts` - Axios instance with interceptors
+- `src/lib/zod-schemas.ts` - Validation schemas
+- `src/lib/axios.ts` - Axios instance with interceptors
 - `tsconfig.json` - TypeScript config
 
 ---

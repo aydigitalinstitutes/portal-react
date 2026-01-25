@@ -169,7 +169,7 @@ npx prisma generate  # Regenerate client
 
 1. **Prisma Migration**: Run `npx prisma migrate dev` when ready to create database tables
 2. **Environment Variables**: Update `.env` files with actual values
-3. **Old Code**: Sequelize code still exists but is not used - can be removed after migration
+3. **Old Code**: Legacy Sequelize code has been removed; Prisma is the active implementation
 4. **Cookies**: Tokens are now in http-only cookies, not localStorage
 5. **TypeScript**: Some files still use `.js` - can be migrated gradually
 

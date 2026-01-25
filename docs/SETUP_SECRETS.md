@@ -46,40 +46,32 @@ This guide will help you set up all required secrets for GitHub Actions workflow
 
 ### Backend/Database (PostgreSQL)
 
-#### 5. DB_HOST
-- **Value:** Your PostgreSQL database host
-- **Examples:**
-  - Local: `localhost`
-  - Supabase: `db.xxxxx.supabase.co`
-  - Railway: `containers-us-west-xxx.railway.app`
-  - Neon: `ep-xxxxx.us-east-2.aws.neon.tech`
-- **Add as secret:** `DB_HOST`
+#### 5. DATABASE_URL
+- **Value:** PostgreSQL connection string (recommended)
+- **Example:** `postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&sslmode=require`
+- **Add as secret:** `DATABASE_URL`
 
-#### 6. DB_PORT
-- **Value:** PostgreSQL port (usually `5432`)
-- **Add as secret:** `DB_PORT`
-
-#### 7. DB_NAME
-- **Value:** Your database name (e.g., `aydigital`)
-- **Add as secret:** `DB_NAME`
-
-#### 8. DB_USER
-- **Value:** Your PostgreSQL username
-- **Add as secret:** `DB_USER`
-
-#### 9. DB_PASSWORD
-- **Value:** Your PostgreSQL password
-- **⚠️ Important:** Keep this secure!
-- **Add as secret:** `DB_PASSWORD`
-
-#### 10. JWT_SECRET
+#### 6. JWT_SECRET
 - **Value:** A strong random string for JWT token signing
 - **Generate one:**
   ```bash
   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
   ```
 - **Or use:** Any long random string (at least 32 characters)
-- **Add as secret:** `JWT_SECRET`
+ - **Add as secret:** `JWT_SECRET`
+
+#### 7. REFRESH_TOKEN_SECRET
+- **Value:** A second strong random string for refresh token signing
+- **Add as secret:** `REFRESH_TOKEN_SECRET`
+
+### Database Backup Workflow (Optional)
+
+If you use the database backup workflow, also add:
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
 
 #### 11. GH_PAT (Optional - GitHub Personal Access Token)
 - **Purpose:** Custom GitHub token for workflows (optional, defaults to GITHUB_TOKEN)
@@ -116,12 +108,16 @@ gh secret set VERCEL_TOKEN --body "your-vercel-token"
 gh secret set VERCEL_ORG_ID --body "your-org-id"
 gh secret set VERCEL_PROJECT_ID --body "your-project-id"
 gh secret set VITE_API_URL --body "https://your-api-url.com/api"
+gh secret set DATABASE_URL --body "postgresql://USER:PASSWORD@HOST:5432/DBNAME?schema=public&sslmode=require"
+gh secret set JWT_SECRET --body "your-jwt-secret"
+gh secret set REFRESH_TOKEN_SECRET --body "your-refresh-token-secret"
+
+# Optional (database backup workflow)
 gh secret set DB_HOST --body "your-db-host"
 gh secret set DB_PORT --body "5432"
 gh secret set DB_NAME --body "aydigital"
 gh secret set DB_USER --body "your-db-user"
 gh secret set DB_PASSWORD --body "your-db-password"
-gh secret set JWT_SECRET --body "your-jwt-secret"
 gh secret set GH_PAT --body "your-github-pat"  # Optional
 ```
 

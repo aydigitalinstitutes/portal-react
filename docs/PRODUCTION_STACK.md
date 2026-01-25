@@ -138,7 +138,7 @@ npm install -D typescript @types/node @types/express @types/bcryptjs @types/json
 
 ```
 aydigital/
-├── frontend/
+├── src/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/

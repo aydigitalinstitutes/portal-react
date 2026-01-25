@@ -102,11 +102,11 @@ npm run dev
 - `backend/prisma/schema.prisma` - Database schema
 
 ### **Frontend**
-- `frontend/components/auth/LoginForm.tsx` - Login with RHF
-- `frontend/components/auth/RegisterForm.tsx` - Register with RHF
-- `frontend/lib/zod-schemas.ts` - Validation schemas
-- `frontend/lib/axios.ts` - HTTP client
-- `frontend/context/AuthContext.jsx` - Cookie-based auth
+- `src/components/auth/LoginForm.tsx` - Login with RHF
+- `src/components/auth/RegisterForm.tsx` - Register with RHF
+- `src/lib/zod-schemas.ts` - Validation schemas
+- `src/lib/axios.ts` - HTTP client
+- `src/context/AuthContext.jsx` - Cookie-based auth
 
 ---
 

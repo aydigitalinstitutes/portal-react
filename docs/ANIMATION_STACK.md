@@ -150,7 +150,7 @@ Animated skeleton loaders for content placeholders.
 ## 📁 File Structure
 
 ```
-frontend/
+src/
 ├── components/
 │   ├── common/
 │   │   ├── AnimatedPage.jsx       # Route transitions
@@ -254,7 +254,7 @@ useEffect(() => {
 
 ## 🎨 Animation Utilities
 
-Located in `frontend/utils/animations.js`:
+Located in `src/utils/animations.js`:
 
 - `pageVariants` - Route transition variants
 - `pageTransition` - Transition configuration
