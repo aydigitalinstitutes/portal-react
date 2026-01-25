@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import api from '../lib/axios';
 
 const AuthContext = createContext();
 
@@ -13,43 +14,26 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
+  // Check authentication on mount
   useEffect(() => {
-    if (token) {
-      getUserProfile();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    checkAuth();
+  }, []);
 
-  const getUserProfile = async () => {
+  const checkAuth = async () => {
     try {
-      const response = await fetch(`${API_URL}/user/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.data);
+      const response = await api.get('/auth/me');
+      if (response.data.success) {
+        setUser(response.data.user);
+        setIsAuthenticated(true);
       } else {
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('token');
-        }
-        setToken(null);
         setUser(null);
+        setIsAuthenticated(false);
       }
     } catch (error) {
-      console.error('Get profile error:', error);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-      }
-      setToken(null);
       setUser(null);
+      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
@@ -57,76 +41,68 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setToken(data.data.token);
-        setUser(data.data);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('token', data.data.token);
-        }
-        return { success: true, data: data.data };
+      const response = await api.post('/auth/login', { email, password });
+      
+      if (response.data.success) {
+        // Cookies are set automatically by the browser
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true, data: response.data.user };
       } else {
-        return { success: false, message: data.message || 'Login failed' };
+        return { success: false, message: response.data.message || 'Login failed' };
       }
     } catch (error) {
-      console.error('Login error:', error);
-      return { success: false, message: 'Network error. Please try again.' };
+      const message = error.response?.data?.message || 'Network error. Please try again.';
+      return { success: false, message };
     }
   };
 
   const register = async (userData) => {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setToken(data.data.token);
-        setUser(data.data);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('token', data.data.token);
-        }
-        return { success: true, data: data.data };
+      const response = await api.post('/auth/register', userData);
+      
+      if (response.data.success) {
+        // Cookies are set automatically by the browser
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true, data: response.data.user };
       } else {
-        return { success: false, message: data.message || 'Registration failed', errors: data.errors };
+        return {
+          success: false,
+          message: response.data.message || 'Registration failed',
+          errors: response.data.errors,
+        };
       }
     } catch (error) {
-      console.error('Register error:', error);
-      return { success: false, message: 'Network error. Please try again.' };
+      const message = error.response?.data?.message || 'Network error. Please try again.';
+      return { success: false, message };
     }
   };
 
-  const logout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Clear user state regardless of API call result
+      setUser(null);
+      setIsAuthenticated(false);
     }
-    setToken(null);
-    setUser(null);
+  };
+
+  const refreshUser = async () => {
+    await checkAuth();
   };
 
   const value = {
     user,
-    token,
     loading,
+    isAuthenticated,
     login,
     register,
     logout,
-    isAuthenticated: !!user,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
