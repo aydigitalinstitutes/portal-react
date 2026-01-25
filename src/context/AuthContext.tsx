@@ -1,7 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../lib/axios';
 
-const AuthContext = createContext();
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  phone?: string;
+  courseInterested?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<any>;
+  register: (userData: any) => Promise<any>;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -11,8 +30,8 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -39,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string) => {
     try {
       const response = await api.post('/auth/login', { email, password });
       
@@ -51,13 +70,13 @@ export const AuthProvider = ({ children }) => {
       } else {
         return { success: false, message: response.data.message || 'Login failed' };
       }
-    } catch (error) {
+    } catch (error: any) {
       const message = error.response?.data?.message || 'Network error. Please try again.';
       return { success: false, message };
     }
   };
 
-  const register = async (userData) => {
+  const register = async (userData: any) => {
     try {
       const response = await api.post('/auth/register', userData);
       
@@ -73,7 +92,7 @@ export const AuthProvider = ({ children }) => {
           errors: response.data.errors,
         };
       }
-    } catch (error) {
+    } catch (error: any) {
       const message = error.response?.data?.message || 'Network error. Please try again.';
       return { success: false, message };
     }

@@ -1,15 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
 
-const Register = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSuccess = () => {
     navigate('/dashboard');
   };
 
-  return <RegisterForm onSuccess={handleSuccess} />;
+  return <LoginForm onSuccess={handleSuccess} />;
 };
 
-export default Register;
+export default Login;

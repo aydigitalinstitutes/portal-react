@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaPhone, FaGraduationCap, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaGraduationCap, FaSignOutAlt } from 'react-icons/fa';
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
