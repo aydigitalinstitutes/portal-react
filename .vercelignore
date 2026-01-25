@@ -1,0 +1,14 @@
+api/
+backend/
+admin/
+docs/
+nginx/
+supabase/
+
+**/node_modules/
+**/dist/
+**/coverage/
+
+*.tar.gz
+*.dump
+backups/
