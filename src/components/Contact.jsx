@@ -52,12 +52,28 @@ const Contact = () => {
   ];
 
   const courses = [
-    'Computer Basics',
-    'MS Office',
-    'Web Development',
+    'ACC – Awareness in Computer Concepts',
+    'BCC – Basic Computer Course',
+    'CCC – Course on Computer Concepts',
+    'CCC Plus – Course on Computer Concepts Plus',
+    'ECC – Expert Computer Course',
+    "DOEACC 'O' Level (NIELIT O Level)",
+    "DOEACC 'A' Level (NIELIT A Level)",
+    "DOEACC 'B' Level (NIELIT B Level)",
+    "DOEACC 'C' Level (NIELIT C Level)",
+    'DCA – Diploma in Computer Applications',
+    'ADCA – Advanced Diploma in Computer Applications',
+    'Hardware & Networking',
+    'Office Automation & Data Entry',
+    'Web Design / Web Development Basics',
+    'Tally / Accounting Software',
+    'Web Development (HTML, CSS, JavaScript, React)',
     'Graphic Design',
-    'Tally / Accounting Basics',
     'Cybersecurity Basics',
+    'Python Programming',
+    'Artificial Intelligence Basics',
+    'IoT (Internet of Things)',
+    'Digital Marketing',
   ];
 
   return (
