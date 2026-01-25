@@ -1,6 +1,7 @@
 // Prisma Schema for AY Digital Institute
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
