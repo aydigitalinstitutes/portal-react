@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { JWTPayload, TokenPair } from '../types/auth.types.js';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/index.js';
 import crypto from 'crypto';
 
 const prisma = new PrismaClient();

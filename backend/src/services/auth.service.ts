@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/index.js';
 import bcrypt from 'bcryptjs';
 import { TokenService } from './token.service.js';
 import { AuthResponse, JWTPayload } from '../types/auth.types.js';

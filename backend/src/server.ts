@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma/index.js';
 import { securityHeaders, corsOptions, apiRateLimiter } from './middleware/security.js';
 import authRoutes from './routes/auth.routes.js';
 
