@@ -1,8 +1,12 @@
 -- PostgreSQL Database Setup Script for AY Digital Institute
 -- Run this script in your PostgreSQL client (psql) or pgAdmin
 
--- Create database
-CREATE DATABASE aydigital;
+-- Database: neondb (Neon PostgreSQL)
+-- Database is already created in Neon
+-- This script is for reference only
+
+-- Note: For Neon, the database 'neondb' is already created
+-- Tables will be automatically created by Sequelize on first run
 
 -- Connect to the database (run this in psql: \c aydigital)
 -- Or use: psql -U postgres -d aydigital
