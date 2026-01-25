@@ -1,38 +1,19 @@
 import React from 'react';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
+import { reviewsData } from '../../data/content';
+import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
 
 const Reviews = () => {
-  const reviews = [
-    {
-      id: 1,
-      text: 'I learned Excel properly and now I can make reports easily.',
-      author: 'Student',
-      rating: 5,
-    },
-    {
-      id: 2,
-      text: 'Best for beginners, teaching is simple and practical.',
-      author: 'Student',
-      rating: 5,
-    },
-    {
-      id: 3,
-      text: 'I built my first website and portfolio in the course.',
-      author: 'Student',
-      rating: 5,
-    },
-  ];
-
   return (
-    <section id="reviews" className="bg-gray-50 py-20">
-      <div className="section-container">
-        <h2 className="section-title">Student Reviews</h2>
-        <p className="section-subtitle">
+    <Section id="reviews" className="bg-gray-50 py-20">
+      <Container>
+        <SectionTitle>Student Reviews</SectionTitle>
+        <SectionSubtitle>
           See what our students have to say about their learning experience.
-        </p>
+        </SectionSubtitle>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((review) => (
+          {reviewsData.map((review) => (
             <div
               key={review.id}
               className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
@@ -50,8 +31,8 @@ const Reviews = () => {
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 };
 

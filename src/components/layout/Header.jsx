@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { scrollToSection } from '../../utils/helpers';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = ['Home', 'Courses', 'About', 'Why Us', 'Reviews', 'Contact'];
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId.toLowerCase());
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
+  const handleMenuClick = (item) => {
+    const sectionId = item === 'Home' ? 'home' : item.toLowerCase().replace(' ', '-');
+    scrollToSection(sectionId);
+    setIsMenuOpen(false);
   };
 
   return (
@@ -28,7 +27,7 @@ const Header = () => {
             {menuItems.map((item) => (
               <button
                 key={item}
-                onClick={() => scrollToSection(item)}
+                onClick={() => handleMenuClick(item)}
                 className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200"
               >
                 {item}
@@ -58,7 +57,7 @@ const Header = () => {
               {menuItems.map((item) => (
                 <button
                   key={item}
-                  onClick={() => scrollToSection(item)}
+                  onClick={() => handleMenuClick(item)}
                   className="text-left text-gray-700 hover:text-primary-600 font-medium py-2"
                 >
                   {item}

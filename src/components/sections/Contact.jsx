@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
+import { contactInfo as contactInfoData, coursesData } from '../../data';
+import { getCourseList } from '../../utils/helpers';
+import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
+
+const iconMap = {
+  FaPhone: FaPhone,
+  FaEnvelope: FaEnvelope,
+  FaMapMarkerAlt: FaMapMarkerAlt,
+  FaClock: FaClock,
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,95 +28,47 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission here
     console.log('Form submitted:', formData);
     alert('Thank you for your inquiry! We will contact you soon.');
     setFormData({ name: '', phone: '', course: '', message: '' });
   };
 
-  const contactInfo = [
-    {
-      icon: <FaPhone className="text-2xl text-primary-600" />,
-      label: 'Phone/WhatsApp',
-      value: '+91 XXXXXXXXXX',
-      link: 'tel:+91XXXXXXXXXX',
-    },
-    {
-      icon: <FaEnvelope className="text-2xl text-primary-600" />,
-      label: 'Email',
-      value: 'yourmail@email.com',
-      link: 'mailto:yourmail@email.com',
-    },
-    {
-      icon: <FaMapMarkerAlt className="text-2xl text-primary-600" />,
-      label: 'Address',
-      value: 'Your institute address here',
-      link: null,
-    },
-    {
-      icon: <FaClock className="text-2xl text-primary-600" />,
-      label: 'Hours',
-      value: 'Mon–Sat, 10:00 AM – 7:00 PM',
-      link: null,
-    },
-  ];
-
-  const courses = [
-    'ACC – Awareness in Computer Concepts',
-    'BCC – Basic Computer Course',
-    'CCC – Course on Computer Concepts',
-    'CCC Plus – Course on Computer Concepts Plus',
-    'ECC – Expert Computer Course',
-    "DOEACC 'O' Level (NIELIT O Level)",
-    "DOEACC 'A' Level (NIELIT A Level)",
-    "DOEACC 'B' Level (NIELIT B Level)",
-    "DOEACC 'C' Level (NIELIT C Level)",
-    'DCA – Diploma in Computer Applications',
-    'ADCA – Advanced Diploma in Computer Applications',
-    'Hardware & Networking',
-    'Office Automation & Data Entry',
-    'Web Design / Web Development Basics',
-    'Tally / Accounting Software',
-    'Web Development (HTML, CSS, JavaScript, React)',
-    'Graphic Design',
-    'Cybersecurity Basics',
-    'Python Programming',
-    'Artificial Intelligence Basics',
-    'IoT (Internet of Things)',
-    'Digital Marketing',
-  ];
+  const courses = getCourseList(coursesData);
 
   return (
-    <section id="contact" className="bg-white py-20">
-      <div className="section-container">
-        <h2 className="section-title">Contact Us</h2>
-        <p className="section-subtitle">
-          Message us to get fees, timings, and course details.
-        </p>
+    <Section id="contact" className="bg-white py-20">
+      <Container>
+        <SectionTitle>Contact Us</SectionTitle>
+        <SectionSubtitle>Message us to get fees, timings, and course details.</SectionSubtitle>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
           {/* Contact Info */}
           <div>
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
             <div className="space-y-6">
-              {contactInfo.map((info, index) => (
-                <div key={index} className="flex items-start gap-4">
-                  <div className="mt-1">{info.icon}</div>
-                  <div>
-                    <p className="font-semibold text-gray-900 mb-1">{info.label}</p>
-                    {info.link ? (
-                      <a
-                        href={info.link}
-                        className="text-primary-600 hover:text-primary-700 transition-colors"
-                      >
-                        {info.value}
-                      </a>
-                    ) : (
-                      <p className="text-gray-600">{info.value}</p>
-                    )}
+              {contactInfoData.map((info, index) => {
+                const IconComponent = iconMap[info.icon];
+                return (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-1">
+                      {IconComponent && <IconComponent className="text-2xl text-primary-600" />}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 mb-1">{info.label}</p>
+                      {info.link ? (
+                        <a
+                          href={info.link}
+                          className="text-primary-600 hover:text-primary-700 transition-colors"
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className="text-gray-600">{info.value}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -188,8 +150,8 @@ const Contact = () => {
             </form>
           </div>
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 };
 

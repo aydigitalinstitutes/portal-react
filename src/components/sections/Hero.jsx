@@ -1,19 +1,13 @@
 import React from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
+import { heroHighlights, heroStats } from '../../data/content';
+import { scrollToSection } from '../../utils/helpers';
+import { Section, Container } from '../common/Section';
 
 const Hero = () => {
-  const highlights = ['Practical Training', 'Beginner Friendly', 'Portfolio Projects'];
-
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <section id="home" className="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-20 md:py-28">
-      <div className="section-container">
+    <Section id="home" className="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-20 md:py-28">
+      <Container>
         <div className="max-w-4xl mx-auto text-center">
           {/* Headline */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
@@ -29,7 +23,7 @@ const Hero = () => {
 
           {/* Highlights */}
           <div className="flex flex-wrap justify-center gap-4 mb-10">
-            {highlights.map((highlight, index) => (
+            {heroHighlights.map((highlight, index) => (
               <div
                 key={index}
                 className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md border border-primary-100"
@@ -58,28 +52,21 @@ const Hero = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-primary-100">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                1000+
+            {heroStats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-xl shadow-lg border border-primary-100"
+              >
+                <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-gray-600 font-medium">{stat.label}</div>
               </div>
-              <div className="text-gray-600 font-medium">Students Trained</div>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-primary-100">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                50+
-              </div>
-              <div className="text-gray-600 font-medium">Projects / Assignments</div>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow-lg border border-primary-100">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-2">
-                ✓
-              </div>
-              <div className="text-gray-600 font-medium">Weekday & Weekend Batches</div>
-            </div>
+            ))}
           </div>
         </div>
-      </div>
-    </section>
+      </Container>
+    </Section>
   );
 };
 
