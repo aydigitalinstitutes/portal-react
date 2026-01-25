@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -42,6 +43,17 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  // Swagger Configuration
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('AY Digital API')
+    .setDescription('The AY Digital Institute API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addCookieAuth('refreshToken')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(port);
 }

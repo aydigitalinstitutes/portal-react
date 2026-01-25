@@ -1,196 +1,74 @@
 # AY Digital Institute
 
-Full-stack repo containing:
-- Public website (Vite + React)
-- Admin dashboard (Vite + React)
-- Backend APIs (Express + Prisma, and a separate NestJS API)
+Full-stack platform containing:
+- **Public Website**: Modern React + Vite application (`src/`)
+- **Admin Portal**: Dedicated dashboard for management (`admin/`)
+- **Backend API**: Scalable NestJS service (`api/`)
 
-## Project Structure
+## Architecture Overview
 
-```
-aydigital/
-├── src/              # Public website source (Vite entry: src/main.jsx)
-├── admin/            # Admin frontend (Vite)
-├── backend/           # Express API (Prisma)
-├── api/              # NestJS API (Prisma + Redis + JWT + OAuth)
-├── docs/             # Documentation
-├── nginx/            # Reverse proxy example config
-└── docker-compose.yml
-```
+### 1. Backend (`api/`)
+- **Framework**: NestJS (TypeScript)
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: JWT, OAuth (Google/GitHub), RBAC
+- **Docs**: Swagger/OpenAPI at `/api/docs`
+- **Logging**: Winston
+- **Testing**: Jest (Unit & E2E)
 
-## Features
+### 2. Frontend (`src/`)
+- **Framework**: React 18 + Vite (TypeScript)
+- **Styling**: Tailwind CSS
+- **State**: Context API
+- **Testing**: Vitest + React Testing Library
 
-### Frontend
-- ✅ Responsive React website
-- ✅ User Authentication (Login/Register)
-- ✅ Protected Routes
-- ✅ Dashboard for logged-in users
-- ✅ 22 Courses with NIELIT certifications
-- ✅ Contact form
-- ✅ WhatsApp floating button
-- ✅ Smooth animations
+### 3. Admin Portal (`admin/`)
+- **Framework**: React 18 + Vite (TypeScript)
+- **Features**: User management, Content management, Analytics
+- **Charts**: Recharts
+- **Testing**: Vitest
 
-### Backend
-- ✅ RESTful API with Express.js
-- ✅ JWT Authentication
-- ✅ User Registration & Login
-- ✅ Protected API routes
-- ✅ PostgreSQL database
-- ✅ User profile management
+## Quick Start
 
-## Setup Instructions
+### Prerequisites
+- Node.js 20+
+- PostgreSQL
+- Redis (optional, for caching)
 
-### Public Website (root)
-
-1. Install dependencies:
+### Installation
 ```bash
+# Install root dependencies (and Husky hooks)
 npm install
+
+# Install sub-project dependencies
+npm -C api install
+npm -C admin install
 ```
 
-2. Create `.env` file in repo root:
-```env
-VITE_API_URL=http://localhost:5001/api
-```
-
-3. Start development server:
+### Development
 ```bash
-npm run dev
-```
-
-### Express Backend (`backend/`)
-
-1. Navigate to backend folder:
-```bash
-cd backend
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create `.env` file from example:
-```bash
-cp .env.example .env
-```
-
-4. Create `.env` from example and set `DATABASE_URL` and JWT secrets.
-
-5. Create PostgreSQL database:
-```sql
-CREATE DATABASE aydigital;
-```
-
-5. Start backend server:
-```bash
-# Development (with nodemon)
+# Run all services (requires configured .env files)
 npm run dev
 
-# Production
-npm start
+# Run individual services
+npm -C api run start:dev
+npm -C admin run dev
 ```
 
-## API Endpoints
-
-### Express Auth
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/refresh`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
-
-### Admin (Express)
-- `GET /api/admin/stats`
-- `GET /api/admin/users`
-- `PATCH /api/admin/users/:id`
-
-### NestJS API
-- Versioned under `/api/v1/*`
-- Health and metrics: `GET /health`, `GET /metrics`
-
-## Frontend Routes
-
-- `/` - Home page
-- `/login` - Login page
-- `/register` - Registration page
-- `/dashboard` - User dashboard (Protected)
-
-## Technologies
-
-### Frontend
-- React 18
-- React Router DOM
-- Tailwind CSS
-- Vite
-- React Icons
-
-### Backend
-- Node.js
-- Express.js
-- PostgreSQL (Prisma ORM)
-- JWT (jsonwebtoken)
-- bcryptjs
-
-## Development
-
-Run both frontend and backend simultaneously:
-
-**Terminal 1 (Frontend):**
+### Docker Support
+Each service includes a `Dockerfile` for containerized deployment.
 ```bash
-npm run dev
+docker-compose up -d --build
 ```
 
-**Terminal 2 (Backend):**
-```bash
-cd backend
-npm run dev
-```
+## Quality Assurance
+- **Linting**: ESLint + Prettier (enforced via Husky pre-commit hooks)
+- **Testing**:
+  - API: `npm -C api run test`
+  - Web: `npm run test`
+  - Admin: `npm -C admin run test`
 
-## GitHub Actions CI/CD
+## Documentation
+- [Architecture Refactor](./docs/ARCHITECTURE_REFACTOR.md)
+- [Deployment Guide](./docs/DEPLOYMENT_GUIDE.md)
+- [Database Setup](./docs/DATABASE_SETUP.md)
 
-This project includes GitHub Actions workflows for automated CI/CD:
-
-> 📖 **Quick Setup:** See [SETUP_SECRETS.md](./docs/SETUP_SECRETS.md) for detailed instructions on setting up GitHub secrets.
-
-### Available Workflows
-- **CI/CD Pipeline**: Automated testing, building, and frontend deployment
-- **Database Migration**: Run database schema updates
-- **Backend Deployment**: Deploy backend to staging/production
-- **Database Backup**: Automated daily backups (runs at 2 AM UTC)
-
-### Setup GitHub Actions Secrets
-
-Go to your repository → Settings → Secrets and variables → Actions, and add:
-
-**Frontend:**
-- `VERCEL_TOKEN` - Vercel API token
-- `VERCEL_ORG_ID` - Vercel organization ID
-- `VERCEL_PROJECT_ID` - Vercel project ID
-- `VITE_API_URL` - Production API URL
-
-**Backend/Database:**
-- `DATABASE_URL` - PostgreSQL connection string
-- `JWT_SECRET` - Access token signing secret
-- `REFRESH_TOKEN_SECRET` - Refresh token signing secret
-
-**Database Backup (Optional):**
-- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
-
-See `.github/README.md` for detailed workflow documentation.
-
-## Production Deployment
-
-### Frontend
-- Build: `npm run build`
-- Deploy to Vercel/Netlify
-- GitHub Actions will auto-deploy on push to main branch
-
-### Backend
-- Deploy to Heroku/Railway/Render
-- Set environment variables
-- Connect PostgreSQL database (local or cloud like Supabase, Neon, etc.)
-- Use GitHub Actions workflow for automated deployment
-
-## License
-
-This project is created for AY Digital Institute.
