@@ -13,19 +13,40 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 const main = async () => {
-  const adminEmail = 'admin@aydigital.com';
-  const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
+  // Existing admin
+  const defaultAdminEmail = 'admin@aydigital.com';
+  const existingDefault = await prisma.user.findUnique({ where: { email: defaultAdminEmail } });
 
-  if (!existing) {
+  if (!existingDefault) {
     await prisma.user.create({
       data: {
-        email: adminEmail,
-        name: 'Admin',
+        email: defaultAdminEmail,
+        name: 'Default Admin',
         role: 'ADMIN',
         provider: 'LOCAL',
         passwordHash: await bcrypt.hash('admin123', 10),
       },
     });
+    console.log(`Created default admin: ${defaultAdminEmail}`);
+  }
+
+  // New requested admin
+  const requestedAdminEmail = 'admin@admin.com';
+  const existingRequested = await prisma.user.findUnique({ where: { email: requestedAdminEmail } });
+
+  if (!existingRequested) {
+    await prisma.user.create({
+      data: {
+        email: requestedAdminEmail,
+        name: 'System Admin',
+        role: 'ADMIN',
+        provider: 'LOCAL',
+        passwordHash: await bcrypt.hash('admin123', 10),
+      },
+    });
+    console.log(`Created requested admin: ${requestedAdminEmail}`);
+  } else {
+    console.log(`Admin ${requestedAdminEmail} already exists`);
   }
 };
 
