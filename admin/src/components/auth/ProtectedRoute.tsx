@@ -20,9 +20,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  if (!isAuthenticated || user?.role !== 'ADMIN') {
+  if (!isAuthenticated) {
+    // If not authenticated, redirect to login
     return <Navigate to="/login" replace />;
   }
+
+  // We allow all authenticated users for now, as this is a general portal
+  // if (user?.role !== 'ADMIN') { ... } 
 
   return <>{children}</>;
 };

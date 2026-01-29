@@ -30,16 +30,8 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         if (onSuccess) {
           onSuccess();
         } else {
-          // Check role and redirect accordingly
-          const role = response.data.data.user.role;
-          if (role === 'USER') {
-             window.location.href = '/dashboard';
-          } else {
-             // For Admin, Teacher, Instructor, etc.
-             // We'll redirect to the admin portal (running on port 5174 usually, or same domain /admin)
-             // Assuming separate admin app:
-             window.location.href = 'http://localhost:5174'; 
-          }
+          // Redirect everyone to the portal
+          window.location.href = 'http://localhost:5174';
         }
       }
     } catch (error: any) {

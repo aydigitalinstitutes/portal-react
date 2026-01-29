@@ -56,10 +56,21 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-md hidden md:block fixed h-full z-10">
         <div className="h-16 flex items-center px-6 border-b">
-          <span className="text-xl font-bold text-red-600">Admin Portal</span>
+          <span className="text-xl font-bold text-red-600">
+             {user?.role === 'ADMIN' ? 'Admin Portal' : 
+              user?.role === 'TEACHER' ? 'Teacher Portal' : 
+              user?.role === 'STUDENT' ? 'Student Portal' : 'User Dashboard'}
+          </span>
         </div>
         <nav className="p-4 space-y-1">
-          {['Overview', 'Students', 'Courses', 'Analytics', 'Settings'].map((item) => (
+          {['Overview', 'Students', 'Courses', 'Analytics', 'Settings']
+            .filter(item => {
+              if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return true;
+              if (user?.role === 'TEACHER') return ['Overview', 'Students', 'Courses'].includes(item);
+              if (user?.role === 'STUDENT' || user?.role === 'USER') return ['Overview', 'Courses'].includes(item);
+              return ['Overview'].includes(item);
+            })
+            .map((item) => (
             <button
               key={item}
               onClick={() => setActiveTab(item.toLowerCase())}
@@ -110,7 +121,7 @@ const AdminDashboard = () => {
                 <div className="flex items-center space-x-3 border-l pl-4 ml-4">
                   <div className="text-right hidden sm:block">
                     <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role || 'Administrator'}</p>
+                    <p className="text-xs text-gray-500 capitalize">{user?.role?.replace('_', ' ') || 'User'}</p>
                   </div>
                   <button
                     onClick={handleLogout}
