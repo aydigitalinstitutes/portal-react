@@ -3,18 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum AuthProvider {
-  LOCAL
-  GOOGLE
-  GITHUB
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -22,8 +12,8 @@ model User {
   email         String       @unique
   passwordHash  String?
   name          String
-  role          Role         @default(USER)
-  provider      AuthProvider @default(LOCAL)
+  role          String       @default("USER")
+  provider      String       @default("LOCAL")
   providerId    String?
   avatarUrl     String?
   isActive      Boolean      @default(true)

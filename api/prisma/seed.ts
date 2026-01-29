@@ -1,59 +1,44 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
 
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) {
-  throw new Error('DATABASE_URL is required');
-}
-
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 const main = async () => {
-  // Existing admin
-  const defaultAdminEmail = 'admin@aydigital.com';
-  const existingDefault = await prisma.user.findUnique({ where: { email: defaultAdminEmail } });
+  const passwordHash = await bcrypt.hash('password123', 10);
+  const adminPasswordHash = await bcrypt.hash('admin123', 10);
 
-  if (!existingDefault) {
-    await prisma.user.create({
-      data: {
-        email: defaultAdminEmail,
-        name: 'Default Admin',
-        role: 'ADMIN',
-        provider: 'LOCAL',
-        passwordHash: await bcrypt.hash('admin123', 10),
-      },
-    });
-    console.log(`Created default admin: ${defaultAdminEmail}`);
-  }
+  const users = [
+    { email: 'superadmin@aydigital.com', name: 'Super Admin', role: 'SUPER_ADMIN' },
+    { email: 'admin@aydigital.com', name: 'Admin User', role: 'ADMIN' },
+    { email: 'teacher@aydigital.com', name: 'Teacher User', role: 'TEACHER' },
+    { email: 'instructor@aydigital.com', name: 'Instructor User', role: 'INSTRUCTOR' },
+    { email: 'hod@aydigital.com', name: 'Head of Dept', role: 'HOD' },
+    { email: 'dean@aydigital.com', name: 'Dean User', role: 'DEAN' },
+    { email: 'user@aydigital.com', name: 'Standard User', role: 'USER' },
+  ];
 
-  // New requested admin
-  const requestedAdminEmail = 'admin@admin.com';
-  const existingRequested = await prisma.user.findUnique({ where: { email: requestedAdminEmail } });
-
-  if (!existingRequested) {
-    await prisma.user.create({
-      data: {
-        email: requestedAdminEmail,
-        name: 'System Admin',
-        role: 'ADMIN',
-        provider: 'LOCAL',
-        passwordHash: await bcrypt.hash('admin123', 10),
-      },
-    });
-    console.log(`Created requested admin: ${requestedAdminEmail}`);
-  } else {
-    console.log(`Admin ${requestedAdminEmail} already exists`);
+  for (const user of users) {
+    const existing = await prisma.user.findUnique({ where: { email: user.email } });
+    if (!existing) {
+      await prisma.user.create({
+        data: {
+          email: user.email,
+          name: user.name,
+          role: user.role as any,
+          provider: 'LOCAL',
+          passwordHash: user.role.includes('ADMIN') ? adminPasswordHash : passwordHash,
+        },
+      });
+      console.log(`Created ${user.role}: ${user.email}`);
+    } else {
+      console.log(`${user.role} already exists: ${user.email}`);
+    }
   }
 };
 
 main()
   .finally(async () => {
     await prisma.$disconnect();
-    await pool.end();
   })
   .catch(async (error) => {
     console.error(error);
