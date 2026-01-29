@@ -22,10 +22,11 @@ import AnimatedPage from './components/common/AnimatedPage';
 function AppContent() {
   useScrollAnimation();
   const location = useLocation();
+  const isAuthPage = ['/login', '/register', '/admin-login'].includes(location.pathname);
 
   return (
     <div className="App font-sans text-gray-900">
-      <Header />
+      {!isAuthPage && <Header />}
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route
@@ -73,7 +74,7 @@ function AppContent() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AnimatePresence>
-      <Footer />
+      {!isAuthPage && <Footer />}
       <WhatsAppButton />
       <BackToTop />
     </div>

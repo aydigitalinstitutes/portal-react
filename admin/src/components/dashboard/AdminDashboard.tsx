@@ -1,10 +1,12 @@
 import { useAuth } from '../../context/AuthContext';
-import { FaUsers, FaGraduationCap, FaChartBar, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaUsers, FaGraduationCap, FaChartBar, FaCog, FaSignOutAlt, FaBookOpen, FaUserGraduate, FaBell, FaSearch } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer, staggerItem } from '../../utils/animations';
+import { useState } from 'react';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview');
 
   const handleLogout = () => {
     logout();
@@ -12,171 +14,250 @@ const AdminDashboard = () => {
 
   const stats = [
     {
-      title: 'Total Users',
-      value: '1,234',
+      title: 'Total Students',
+      value: '2,543',
+      change: '+12%',
       icon: FaUsers,
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600',
+      bgColor: 'bg-blue-50'
     },
     {
       title: 'Active Courses',
-      value: '56',
-      icon: FaGraduationCap,
-      color: 'bg-green-500'
+      value: '24',
+      change: '+3',
+      icon: FaBookOpen,
+      color: 'bg-purple-500',
+      textColor: 'text-purple-600',
+      bgColor: 'bg-purple-50'
     },
     {
-      title: 'Revenue',
-      value: '$12,345',
+      title: 'Course Completions',
+      value: '156',
+      change: '+18%',
+      icon: FaUserGraduate,
+      color: 'bg-green-500',
+      textColor: 'text-green-600',
+      bgColor: 'bg-green-50'
+    },
+    {
+      title: 'Total Revenue',
+      value: '₹4,52,000',
+      change: '+8.5%',
       icon: FaChartBar,
-      color: 'bg-purple-500'
-    },
-    {
-      title: 'System Health',
-      value: '98%',
-      icon: FaCog,
-      color: 'bg-orange-500'
+      color: 'bg-orange-500',
+      textColor: 'text-orange-600',
+      bgColor: 'bg-orange-50'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Welcome, {user?.name}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <FaSignOutAlt />
-                Logout
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-md hidden md:block fixed h-full z-10">
+        <div className="h-16 flex items-center px-6 border-b">
+          <span className="text-xl font-bold text-red-600">Admin Portal</span>
         </div>
-      </header>
+        <nav className="p-4 space-y-1">
+          {['Overview', 'Students', 'Courses', 'Analytics', 'Settings'].map((item) => (
+            <button
+              key={item}
+              onClick={() => setActiveTab(item.toLowerCase())}
+              className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                activeTab === item.toLowerCase()
+                  ? 'bg-red-50 text-red-700'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              {item === 'Overview' && <FaChartBar className="mr-3 h-5 w-5" />}
+              {item === 'Students' && <FaUsers className="mr-3 h-5 w-5" />}
+              {item === 'Courses' && <FaBookOpen className="mr-3 h-5 w-5" />}
+              {item === 'Analytics' && <FaGraduationCap className="mr-3 h-5 w-5" />}
+              {item === 'Settings' && <FaCog className="mr-3 h-5 w-5" />}
+              {item}
+            </button>
+          ))}
+        </nav>
+      </aside>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          {/* Stats Grid */}
+      <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
+        {/* Header */}
+        <header className="bg-white shadow-sm sticky top-0 z-20">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              {/* Search Bar */}
+              <div className="flex-1 max-w-lg">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FaSearch className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-red-500 focus:border-red-500 sm:text-sm transition duration-150 ease-in-out"
+                    placeholder="Search students, courses..."
+                    type="search"
+                  />
+                </div>
+              </div>
+
+              {/* Right Side Actions */}
+              <div className="ml-4 flex items-center md:ml-6 space-x-4">
+                <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  <span className="sr-only">View notifications</span>
+                  <FaBell className="h-6 w-6" />
+                </button>
+                
+                <div className="flex items-center space-x-3 border-l pl-4 ml-4">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-xs text-gray-500 capitalize">{user?.role || 'Administrator'}</p>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                    title="Sign out"
+                  >
+                    <FaSignOutAlt className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Dashboard Content */}
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
           <motion.div
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
+            className="space-y-6"
           >
-            {stats.map((stat) => (
-              <motion.div
-                key={stat.title}
-                variants={staggerItem}
-                className="bg-white overflow-hidden shadow rounded-lg"
-              >
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className={`p-3 rounded-md ${stat.color}`}>
-                        <stat.icon className="h-6 w-6 text-white" />
+            <motion.div variants={fadeInUp}>
+              <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+              <p className="mt-1 text-sm text-gray-500">
+                Welcome back! Here's what's happening at AY Digital Institute today.
+              </p>
+            </motion.div>
+
+            {/* Stats Grid */}
+            <motion.div 
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+              variants={staggerContainer}
+            >
+              {stats.map((stat) => (
+                <motion.div
+                  key={stat.title}
+                  variants={staggerItem}
+                  className="bg-white overflow-hidden shadow-sm rounded-xl hover:shadow-md transition-shadow duration-300"
+                >
+                  <div className="p-5">
+                    <div className="flex items-center">
+                      <div className={`flex-shrink-0 rounded-md p-3 ${stat.bgColor}`}>
+                        <stat.icon className={`h-6 w-6 ${stat.textColor}`} />
+                      </div>
+                      <div className="ml-5 w-0 flex-1">
+                        <dl>
+                          <dt className="text-sm font-medium text-gray-500 truncate">
+                            {stat.title}
+                          </dt>
+                          <dd className="flex items-baseline">
+                            <div className="text-2xl font-semibold text-gray-900">
+                              {stat.value}
+                            </div>
+                            <div className="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                              {stat.change}
+                            </div>
+                          </dd>
+                        </dl>
                       </div>
                     </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          {stat.title}
-                        </dt>
-                        <dd className="text-lg font-medium text-gray-900">
-                          {stat.value}
-                        </dd>
-                      </dl>
-                    </div>
                   </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {/* Recent Activity */}
+              <motion.div
+                className="bg-white shadow-sm rounded-xl p-6"
+                variants={fadeInUp}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-medium text-gray-900">Recent Activity</h3>
+                  <button className="text-sm text-red-600 hover:text-red-700 font-medium">View all</button>
+                </div>
+                <div className="flow-root">
+                  <ul className="-mb-8">
+                    {[1, 2, 3, 4].map((item, itemIdx) => (
+                      <li key={item}>
+                        <div className="relative pb-8">
+                          {itemIdx !== 3 ? (
+                            <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true" />
+                          ) : null}
+                          <div className="relative flex space-x-3">
+                            <div>
+                              <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white ${
+                                item % 2 === 0 ? 'bg-blue-500' : 'bg-green-500'
+                              }`}>
+                                {item % 2 === 0 ? <FaUsers className="h-4 w-4 text-white" /> : <FaGraduationCap className="h-4 w-4 text-white" />}
+                              </span>
+                            </div>
+                            <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                              <div>
+                                <p className="text-sm text-gray-500">
+                                  {item % 2 === 0 ? 'New student registration' : 'Course completion certificate issued'} 
+                                  <a href="#" className="font-medium text-gray-900 ml-1">
+                                    {item % 2 === 0 ? 'Rahul Kumar' : 'Priya Singh'}
+                                  </a>
+                                </p>
+                              </div>
+                              <div className="text-right text-sm whitespace-nowrap text-gray-500">
+                                <time dateTime="2020-09-20">{item}h ago</time>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </motion.div>
-            ))}
+
+              {/* Quick Actions */}
+              <motion.div
+                className="bg-white shadow-sm rounded-xl p-6"
+                variants={fadeInUp}
+              >
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <button className="p-4 border border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all group text-left">
+                    <FaUsers className="h-6 w-6 text-gray-400 group-hover:text-red-500 mb-2" />
+                    <span className="block font-medium text-gray-900 group-hover:text-red-700">Add Student</span>
+                    <span className="text-xs text-gray-500">Register new enrollment</span>
+                  </button>
+                  <button className="p-4 border border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all group text-left">
+                    <FaBookOpen className="h-6 w-6 text-gray-400 group-hover:text-red-500 mb-2" />
+                    <span className="block font-medium text-gray-900 group-hover:text-red-700">Create Course</span>
+                    <span className="text-xs text-gray-500">Add new curriculum</span>
+                  </button>
+                  <button className="p-4 border border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all group text-left">
+                    <FaChartBar className="h-6 w-6 text-gray-400 group-hover:text-red-500 mb-2" />
+                    <span className="block font-medium text-gray-900 group-hover:text-red-700">Generate Report</span>
+                    <span className="text-xs text-gray-500">Download statistics</span>
+                  </button>
+                  <button className="p-4 border border-gray-200 rounded-lg hover:border-red-500 hover:bg-red-50 transition-all group text-left">
+                    <FaCog className="h-6 w-6 text-gray-400 group-hover:text-red-500 mb-2" />
+                    <span className="block font-medium text-gray-900 group-hover:text-red-700">System Config</span>
+                    <span className="text-xs text-gray-500">Manage settings</span>
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
-
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Recent Activity */}
-            <motion.div
-              className="bg-white shadow rounded-lg"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                  Recent Activity
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-                        <FaUsers className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">
-                        New user registered
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        john.doe@example.com joined 2 hours ago
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
-                        <FaGraduationCap className="h-4 w-4 text-white" />
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">
-                        Course completed
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        React Fundamentals completed by 5 users
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Quick Actions */}
-            <motion.div
-              className="bg-white shadow rounded-lg"
-              variants={fadeInUp}
-              initial="initial"
-              animate="animate"
-            >
-              <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                  Quick Actions
-                </h3>
-                <div className="space-y-3">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                    Manage Users
-                  </button>
-                  <button className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
-                    Add New Course
-                  </button>
-                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors">
-                    View Reports
-                  </button>
-                  <button className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors">
-                    System Settings
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
