@@ -6,13 +6,14 @@ import { Link } from 'react-router-dom';
 import { loginSchema, type LoginFormData } from '../../lib/zod-schemas';
 import AnimatedButton from '../common/AnimatedButton';
 import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
-import api from '../../lib/axios';
+import { useAuth } from '../../context/AuthContext';
 
 interface LoginFormProps {
   onSuccess?: () => void;
 }
 
 const LoginForm = ({ onSuccess }: LoginFormProps) => {
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -23,19 +24,16 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      const response = await api.post('/auth/login', data);
-      
-      if (response.data.success) {
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          window.location.href = '/dashboard';
-        }
+    const result = await login(data.email, data.password);
+
+    if (result.success) {
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        window.location.href = '/dashboard';
       }
-    } catch (error: any) {
-      const message = error.response?.data?.error?.message || error.response?.data?.message || 'Login failed. Please try again.';
-      setError('root', { message });
+    } else {
+      setError('root', { message: result.message });
     }
   };
 

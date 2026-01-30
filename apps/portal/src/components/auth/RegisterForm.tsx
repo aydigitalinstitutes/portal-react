@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { registerSchema, type RegisterFormData } from '../../lib/zod-schemas';
 import AnimatedButton from '../common/AnimatedButton';
 import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
-import api from '../../lib/axios';
+import { useAuth } from '../../context/AuthContext';
 import { coursesData } from '../../data/courses';
 
 interface RegisterFormProps {
@@ -14,6 +14,7 @@ interface RegisterFormProps {
 }
 
 const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const { register: registerUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -26,27 +27,22 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const courses = coursesData.map((course) => course.title);
 
   const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const { confirmPassword, ...registerData } = data;
-      const response = await api.post('/auth/register', registerData);
-      
-      if (response.data.success) {
-        if (onSuccess) {
-          onSuccess();
-        } else {
-          window.location.href = '/dashboard';
-        }
+    const { confirmPassword, ...registerData } = data;
+    const result = await registerUser(registerData);
+
+    if (result.success) {
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        window.location.href = '/dashboard';
       }
-    } catch (error: any) {
-      const message = error.response?.data?.error?.message || error.response?.data?.message || 'Registration failed. Please try again.';
-      const errors = error.response?.data?.error?.details || error.response?.data?.errors;
-      
-      if (errors) {
-        Object.keys(errors).forEach((key) => {
-          setError(key as keyof RegisterFormData, { message: errors[key] });
+    } else {
+      if (result.errors) {
+        Object.keys(result.errors).forEach((key) => {
+          setError(key as keyof RegisterFormData, { message: result.errors![key] });
         });
       } else {
-        setError('root', { message });
+        setError('root', { message: result.message });
       }
     }
   };

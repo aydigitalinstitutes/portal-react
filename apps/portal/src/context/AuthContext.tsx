@@ -9,8 +9,10 @@ type ApiErrorResponse = {
   error?: {
     message: string;
     statusCode: number;
+    details?: Record<string, string>;
   };
   message?: string; // Fallback for legacy
+  errors?: Record<string, string>; // Fallback for legacy
 };
 
 export type AuthUser = {
@@ -24,11 +26,16 @@ type LoginResult =
   | { success: true; data: AuthUser }
   | { success: false; message: string };
 
+type RegisterResult =
+  | { success: true; data: AuthUser }
+  | { success: false; message: string; errors?: Record<string, string> };
+
 type AuthContextValue = {
   user: AuthUser | null;
   loading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<LoginResult>;
+  register: (data: any) => Promise<RegisterResult>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 };
@@ -96,6 +103,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const register = async (data: any): Promise<RegisterResult> => {
+    try {
+      const response = await api.post('/auth/register', data);
+
+      if (response.data.success) {
+        setUser(response.data.user);
+        setIsAuthenticated(true);
+        return { success: true, data: response.data.user };
+      } else {
+        return { success: false, message: 'Registration failed' };
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiErrorResponse>;
+      const message = 
+        axiosError.response?.data?.error?.message ?? 
+        axiosError.response?.data?.message ?? 
+        'Registration failed';
+      
+      const errors = 
+        axiosError.response?.data?.error?.details ?? 
+        axiosError.response?.data?.errors;
+        
+      return {
+        success: false,
+        message,
+        errors,
+      };
+    }
+  };
+
   const logout = async (): Promise<void> => {
     try {
       await api.post('/auth/logout');
@@ -112,6 +149,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loading,
     isAuthenticated,
     login,
+    register,
     logout,
     checkAuth,
   };
