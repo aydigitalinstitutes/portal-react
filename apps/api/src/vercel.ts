@@ -71,9 +71,21 @@ export const createNestServer = async (expressInstance: express.Express) => {
   return app;
 };
 
-// Vercel Serverless Entry Point
-createNestServer(server)
-  .then(() => console.log('Nest Ready'))
-  .catch((err) => console.error('Nest broken', err));
+let nestInitialized = false;
+const ensureNest = async () => {
+  if (nestInitialized) return;
+  await createNestServer(server);
+  nestInitialized = true;
+};
 
-export default server;
+export default async (req: any, res: any) => {
+  if (typeof req?.url === 'string' && req.url.startsWith('/health-lite')) {
+    return server(req, res);
+  }
+  try {
+    await ensureNest();
+  } catch {
+    return res.status(500).send('Server initialization failed');
+  }
+  return server(req, res);
+};
