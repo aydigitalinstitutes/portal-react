@@ -1,23 +1,42 @@
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCourseDto {
-  @ApiProperty({ example: 'Advanced Web Development', description: 'The title of the course' })
+  @ApiProperty({
+    example: 'Advanced Web Development',
+    description: 'The title of the course',
+  })
   @IsNotEmpty()
   @IsString()
   title: string;
 
-  @ApiProperty({ example: 'Programming', description: 'The category of the course' })
+  @ApiProperty({
+    example: 'Programming',
+    description: 'The category of the course',
+  })
   @IsNotEmpty()
   @IsString()
   category: string;
 
-  @ApiProperty({ example: 'FaCode', description: 'The icon identifier for the course' })
+  @ApiProperty({
+    example: 'FaCode',
+    description: 'The icon identifier for the course',
+  })
   @IsNotEmpty()
   @IsString()
   icon: string;
 
-  @ApiProperty({ example: ['HTML', 'CSS', 'JavaScript'], description: 'List of topics covered' })
+  @ApiProperty({
+    example: ['HTML', 'CSS', 'JavaScript'],
+    description: 'List of topics covered',
+  })
   @IsNotEmpty()
   @IsArray()
   @IsString({ each: true })
@@ -28,7 +47,10 @@ export class CreateCourseDto {
   @IsString()
   duration: string;
 
-  @ApiProperty({ example: 'Beginner', description: 'Difficulty level of the course' })
+  @ApiProperty({
+    example: 'Beginner',
+    description: 'Difficulty level of the course',
+  })
   @IsNotEmpty()
   @IsString()
   level: string;
@@ -38,7 +60,11 @@ export class CreateCourseDto {
   @IsNumber()
   order?: number;
 
-  @ApiProperty({ example: true, description: 'Whether the course is active', required: false })
+  @ApiProperty({
+    example: true,
+    description: 'Whether the course is active',
+    required: false,
+  })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

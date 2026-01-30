@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { pageVariants, pageTransition } from '../../utils/animations';
+import React from "react";
+import { motion } from "framer-motion";
+import { pageVariants, pageTransition } from "../../utils/animations";
 
-const AnimatedPage = React.forwardRef(({ children, className = '' }, ref) => {
+const AnimatedPage = React.forwardRef(({ children, className = "" }, ref) => {
   return (
     <motion.div
       ref={ref}

@@ -1,13 +1,24 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaUserPlus } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { registerSchema, type RegisterFormData } from '../../lib/zod-schemas';
-import AnimatedButton from '../common/AnimatedButton';
-import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
-import { useAuth } from '../../context/AuthContext';
-import { coursesData } from '../../data/courses';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaPhone,
+  FaUserPlus,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { registerSchema, type RegisterFormData } from "../../lib/zod-schemas";
+import AnimatedButton from "../common/AnimatedButton";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  scaleIn,
+} from "../../utils/animations";
+import { useAuth } from "../../context/AuthContext";
+import { coursesData } from "../../data/courses";
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -34,15 +45,17 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       if (onSuccess) {
         onSuccess();
       } else {
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
       }
     } else {
       if (result.errors) {
         Object.keys(result.errors).forEach((key) => {
-          setError(key as keyof RegisterFormData, { message: result.errors![key] });
+          setError(key as keyof RegisterFormData, {
+            message: result.errors![key],
+          });
         });
       } else {
-        setError('root', { message: result.message });
+        setError("root", { message: result.message });
       }
     }
   };
@@ -58,11 +71,14 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         <motion.div
           className="bg-white p-8 rounded-xl shadow-xl border border-primary-100"
           variants={scaleIn}
-          whileHover={{ scale: 1.01, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
-          transition={{ type: 'spring', stiffness: 300 }}
+          whileHover={{
+            scale: 1.01,
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          }}
+          transition={{ type: "spring", stiffness: 300 }}
         >
           <motion.div className="text-center mb-8" variants={staggerItem}>
-            <motion.div 
+            <motion.div
               className="flex justify-center mb-4"
               variants={fadeInUp}
             >
@@ -76,10 +92,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             >
               Create Account
             </motion.h2>
-            <motion.p
-              className="mt-2 text-gray-600"
-              variants={fadeInUp}
-            >
+            <motion.p className="mt-2 text-gray-600" variants={fadeInUp}>
               Sign up to get started
             </motion.p>
           </motion.div>
@@ -97,9 +110,16 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             )}
           </AnimatePresence>
 
-          <motion.form onSubmit={handleSubmit(onSubmit)} className="space-y-4" variants={staggerContainer}>
+          <motion.form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-4"
+            variants={staggerContainer}
+          >
             <motion.div variants={staggerItem}>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Full Name
               </label>
               <div className="relative">
@@ -109,11 +129,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="name"
                   type="text"
-                  {...register('name')}
+                  {...register("name")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.name 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.name
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Enter your full name"
                   whileFocus={{ scale: 1.01 }}
@@ -123,7 +143,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 {errors.name && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -134,7 +154,10 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Username (Optional)
               </label>
               <div className="relative">
@@ -144,11 +167,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="username"
                   type="text"
-                  {...register('username')}
+                  {...register("username")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.username 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.username
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Choose a username"
                   whileFocus={{ scale: 1.01 }}
@@ -158,7 +181,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 {errors.username && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -169,7 +192,10 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email Address
               </label>
               <div className="relative">
@@ -179,11 +205,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="email"
                   type="email"
-                  {...register('email')}
+                  {...register("email")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.email 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.email
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Enter your email"
                   whileFocus={{ scale: 1.01 }}
@@ -193,7 +219,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 {errors.email && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -204,7 +230,10 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Phone Number (Optional)
               </label>
               <div className="relative">
@@ -214,7 +243,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="phone"
                   type="tel"
-                  {...register('phone')}
+                  {...register("phone")}
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                   placeholder="Enter your phone number"
                   whileFocus={{ scale: 1.01 }}
@@ -223,12 +252,15 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="courseInterested" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="courseInterested"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Course Interested In (Optional)
               </label>
               <motion.select
                 id="courseInterested"
-                {...register('courseInterested')}
+                {...register("courseInterested")}
                 className="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
                 whileFocus={{ scale: 1.01 }}
               >
@@ -242,7 +274,10 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
@@ -252,11 +287,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="password"
                   type="password"
-                  {...register('password')}
+                  {...register("password")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.password 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.password
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Enter your password"
                   whileFocus={{ scale: 1.01 }}
@@ -266,7 +301,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 {errors.password && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -277,7 +312,10 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Confirm Password
               </label>
               <div className="relative">
@@ -287,11 +325,11 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 <motion.input
                   id="confirmPassword"
                   type="password"
-                  {...register('confirmPassword')}
+                  {...register("confirmPassword")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.confirmPassword 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.confirmPassword
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Confirm your password"
                   whileFocus={{ scale: 1.01 }}
@@ -301,7 +339,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 {errors.confirmPassword && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -326,7 +364,7 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
 
           <motion.div className="mt-8 text-center" variants={staggerItem}>
             <p className="text-sm text-gray-600">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link
                 to="/login"
                 className="font-semibold text-primary-600 hover:text-primary-500 transition-colors"

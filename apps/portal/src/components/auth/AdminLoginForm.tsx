@@ -1,10 +1,18 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { FaEnvelope, FaLock, FaShieldAlt } from 'react-icons/fa';
-import { adminLoginSchema, type AdminLoginFormData } from '../../lib/zod-schemas';
-import { useAuth } from '../../context/AuthContext';
-import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { FaEnvelope, FaLock, FaShieldAlt } from "react-icons/fa";
+import {
+  adminLoginSchema,
+  type AdminLoginFormData,
+} from "../../lib/zod-schemas";
+import { useAuth } from "../../context/AuthContext";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  scaleIn,
+} from "../../utils/animations";
 
 interface AdminLoginFormProps {
   onSuccess?: () => void;
@@ -29,10 +37,10 @@ const AdminLoginForm = ({ onSuccess }: AdminLoginFormProps) => {
         onSuccess();
       } else {
         // Redirect if success
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
       }
     } else {
-      setError('root', { message: result.message });
+      setError("root", { message: result.message });
     }
   };
 
@@ -63,7 +71,10 @@ const AdminLoginForm = ({ onSuccess }: AdminLoginFormProps) => {
         >
           <div className="space-y-4">
             <motion.div variants={staggerItem}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Admin Email
               </label>
               <div className="relative">
@@ -71,19 +82,24 @@ const AdminLoginForm = ({ onSuccess }: AdminLoginFormProps) => {
                   <FaEnvelope className="text-gray-400" />
                 </div>
                 <input
-                  {...register('email')}
+                  {...register("email")}
                   type="text"
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition-colors"
                   placeholder="Enter admin email"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
               )}
             </motion.div>
 
             <motion.div variants={staggerItem}>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
@@ -91,14 +107,16 @@ const AdminLoginForm = ({ onSuccess }: AdminLoginFormProps) => {
                   <FaLock className="text-gray-400" />
                 </div>
                 <input
-                  {...register('password')}
+                  {...register("password")}
                   type="password"
                   className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 transition-colors"
                   placeholder="Enter password"
                 />
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
               )}
             </motion.div>
           </div>

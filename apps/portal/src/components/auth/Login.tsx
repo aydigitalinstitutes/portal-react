@@ -1,12 +1,12 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import LoginForm from './LoginForm';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import LoginForm from "./LoginForm";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSuccess = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return <LoginForm onSuccess={handleSuccess} />;

@@ -73,10 +73,12 @@ export class AuthService {
     }
 
     if (dto.username) {
-        const existingUsername = await this.usersRepo.findByEmailOrUsername(dto.username);
-        if (existingUsername) {
-            throw new ForbiddenException('Username is already taken');
-        }
+      const existingUsername = await this.usersRepo.findByEmailOrUsername(
+        dto.username,
+      );
+      if (existingUsername) {
+        throw new ForbiddenException('Username is already taken');
+      }
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -284,10 +286,10 @@ export class AuthService {
     }
 
     const updatedUser = await this.usersRepo.update(userId, updateData);
-    
+
     // Construct avatar URL if avatar data exists
-    const avatarUrl = updatedUser.avatarData 
-      ? `/api/v1/auth/avatar/${updatedUser.id}` 
+    const avatarUrl = updatedUser.avatarData
+      ? `/api/v1/auth/avatar/${updatedUser.id}`
       : null;
 
     return {
@@ -311,10 +313,15 @@ export class AuthService {
     return { buffer: user.avatarData, mimeType: user.avatarMimeType };
   }
 
-  async changePassword(userId: string, dto: { currentPassword: string; newPassword: string }) {
+  async changePassword(
+    userId: string,
+    dto: { currentPassword: string; newPassword: string },
+  ) {
     const user = await this.usersRepo.findById(userId);
     if (!user || !user.passwordHash) {
-      throw new BadRequestException('User has no password set or does not exist');
+      throw new BadRequestException(
+        'User has no password set or does not exist',
+      );
     }
 
     const ok = await bcrypt.compare(dto.currentPassword, user.passwordHash);

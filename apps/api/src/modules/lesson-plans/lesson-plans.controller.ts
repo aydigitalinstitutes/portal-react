@@ -1,5 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { LessonPlansService } from './lesson-plans.service';
 import { CreateLessonPlanDto } from './dto/create-lesson-plan.dto';
 import { UpdateLessonPlanDto } from './dto/update-lesson-plan.dto';
@@ -13,7 +30,10 @@ export class LessonPlansController {
   constructor(private readonly lessonPlansService: LessonPlansService) {}
 
   @ApiOperation({ summary: 'Create a new lesson plan' })
-  @ApiResponse({ status: 201, description: 'The lesson plan has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The lesson plan has been successfully created.',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('TEACHER', 'ADMIN', 'SUPER_ADMIN')
@@ -27,10 +47,7 @@ export class LessonPlansController {
   @ApiQuery({ name: 'skip', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @Get()
-  findAll(
-    @Query('skip') skip?: string,
-    @Query('take') take?: string,
-  ) {
+  findAll(@Query('skip') skip?: string, @Query('take') take?: string) {
     return this.lessonPlansService.findAll({
       skip: skip ? Number(skip) : undefined,
       take: take ? Number(take) : undefined,
@@ -45,17 +62,26 @@ export class LessonPlansController {
   }
 
   @ApiOperation({ summary: 'Update a lesson plan' })
-  @ApiResponse({ status: 200, description: 'The lesson plan has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The lesson plan has been successfully updated.',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('TEACHER', 'ADMIN', 'SUPER_ADMIN')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLessonPlanDto: UpdateLessonPlanDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateLessonPlanDto: UpdateLessonPlanDto,
+  ) {
     return this.lessonPlansService.update(id, updateLessonPlanDto);
   }
 
   @ApiOperation({ summary: 'Delete a lesson plan' })
-  @ApiResponse({ status: 200, description: 'The lesson plan has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The lesson plan has been successfully deleted.',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('TEACHER', 'ADMIN', 'SUPER_ADMIN')

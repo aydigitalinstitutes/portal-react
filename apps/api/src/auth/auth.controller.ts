@@ -12,7 +12,14 @@ import {
   Param,
   StreamableFile,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Request, Response } from 'express';
 import { Throttle } from '@nestjs/throttler';
@@ -31,7 +38,10 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   @ApiOperation({ summary: 'Register a new user' })
-  @ApiResponse({ status: 201, description: 'The user has been successfully registered.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully registered.',
+  })
   @Throttle({ default: { ttl: 60_000, limit: 10 } })
   @Post('register')
   async register(
@@ -44,7 +54,10 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Login a user' })
-  @ApiResponse({ status: 201, description: 'The user has been successfully logged in.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully logged in.',
+  })
   @Throttle({ default: { ttl: 60_000, limit: 10 } })
   @Post('login')
   async login(
@@ -71,7 +84,10 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Logout a user' })
-  @ApiResponse({ status: 201, description: 'The user has been successfully logged out.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully logged out.',
+  })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('logout')
@@ -123,7 +139,10 @@ export class AuthController {
   @ApiOperation({ summary: 'Get user avatar' })
   @ApiResponse({ status: 200, description: 'Return avatar image.' })
   @Get('avatar/:id')
-  async getAvatar(@Param('id') id: string, @Res({ passthrough: true }) res: Response) {
+  async getAvatar(
+    @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { buffer, mimeType } = await this.auth.getAvatar(id);
     res.set({
       'Content-Type': mimeType,

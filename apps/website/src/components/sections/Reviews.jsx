@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { FaStar, FaQuoteLeft } from 'react-icons/fa';
-import { reviewsData as defaultReviews } from '../../data/content';
-import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
-import api from '../../lib/axios';
+import React, { useState, useEffect } from "react";
+import { FaStar, FaQuoteLeft } from "react-icons/fa";
+import { reviewsData as defaultReviews } from "../../data/content";
+import {
+  Section,
+  SectionTitle,
+  SectionSubtitle,
+  Container,
+} from "../common/Section";
+import api from "../../lib/axios";
 
 const Reviews = () => {
   const [reviews, setReviews] = useState(defaultReviews);
@@ -10,12 +15,12 @@ const Reviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const res = await api.get('/website-content/testimonials');
+        const res = await api.get("/website-content/testimonials");
         if (res.data && res.data.length > 0) {
           setReviews(res.data);
         }
       } catch (e) {
-        console.error('Failed to fetch reviews', e);
+        console.error("Failed to fetch reviews", e);
       }
     };
     fetchReviews();
@@ -39,13 +44,17 @@ const Reviews = () => {
               <div className="flex justify-center mb-4">
                 <FaQuoteLeft className="text-3xl text-primary-300" />
               </div>
-              <p className="text-gray-700 mb-4 text-center italic">"{review.text}"</p>
+              <p className="text-gray-700 mb-4 text-center italic">
+                "{review.text}"
+              </p>
               <div className="flex justify-center gap-1 mb-3">
                 {[...Array(review.rating)].map((_, i) => (
                   <FaStar key={i} className="text-yellow-400" />
                 ))}
               </div>
-              <p className="text-gray-500 text-center font-medium">— {review.author}</p>
+              <p className="text-gray-500 text-center font-medium">
+                — {review.author}
+              </p>
             </div>
           ))}
         </div>

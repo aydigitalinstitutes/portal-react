@@ -1,45 +1,60 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaUser, FaLock, FaCheck, FaSave } from 'react-icons/fa';
-import { useAuth } from '../../context/AuthContext';
-import AnimatedButton from '../common/AnimatedButton';
-import { staggerContainer, staggerItem, fadeInUp } from '../../utils/animations';
-import api from '../../lib/axios';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaUser, FaLock, FaCheck, FaSave } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import AnimatedButton from "../common/AnimatedButton";
+import {
+  staggerContainer,
+  staggerItem,
+  fadeInUp,
+} from "../../utils/animations";
+import api from "../../lib/axios";
 
 // --- Schemas ---
 
 const updateProfileSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100).optional(),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters")
+    .max(100)
+    .optional(),
   username: z
     .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(30, 'Username must be less than 30 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers and underscores')
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username must be less than 30 characters")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers and underscores",
+    )
     .optional()
-    .or(z.literal('')),
+    .or(z.literal("")),
   phoneNumber: z.string().optional(),
   dob: z.string().optional(),
   gender: z.string().optional(),
 });
 
-const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
-  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-  confirmPassword: z.string().min(6, 'Password must be at least 6 characters'),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>;
 type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 
 const Settings = () => {
   const { user, checkAuth } = useAuth();
-  const [activeTab, setActiveTab] = useState<'profile' | 'security'>('profile');
+  const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [selectedFile] = useState<File | null>(null);
 
@@ -52,11 +67,13 @@ const Settings = () => {
   } = useForm<UpdateProfileData>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      name: user?.name || '',
-      username: (user as any)?.username || '',
-      phoneNumber: (user as any)?.phoneNumber || '',
-      dob: (user as any)?.dob ? new Date((user as any).dob).toISOString().split('T')[0] : '',
-      gender: (user as any)?.gender || '',
+      name: user?.name || "",
+      username: (user as any)?.username || "",
+      phoneNumber: (user as any)?.phoneNumber || "",
+      dob: (user as any)?.dob
+        ? new Date((user as any).dob).toISOString().split("T")[0]
+        : "",
+      gender: (user as any)?.gender || "",
     },
   });
 
@@ -75,44 +92,48 @@ const Settings = () => {
     setSuccessMessage(null);
     try {
       const formData = new FormData();
-      if (data.name) formData.append('name', data.name);
-      if (data.username) formData.append('username', data.username);
-      if (data.phoneNumber) formData.append('phoneNumber', data.phoneNumber);
-      if (data.dob) formData.append('dob', data.dob);
-      if (data.gender) formData.append('gender', data.gender);
-      
+      if (data.name) formData.append("name", data.name);
+      if (data.username) formData.append("username", data.username);
+      if (data.phoneNumber) formData.append("phoneNumber", data.phoneNumber);
+      if (data.dob) formData.append("dob", data.dob);
+      if (data.gender) formData.append("gender", data.gender);
+
       // If we have a file selected, append it
       // Note: We need to handle file selection state separately from react-hook-form for simplicity
       // or use a controller. For now, let's assume we have a file state.
       if (selectedFile) {
-        formData.append('avatar', selectedFile);
+        formData.append("avatar", selectedFile);
       }
 
-      await api.patch('/auth/me', formData, {
+      await api.patch("/auth/me", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       await checkAuth();
-      setSuccessMessage('Profile updated successfully');
+      setSuccessMessage("Profile updated successfully");
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
-      setErrorProfile('root', { message: err.response?.data?.message || 'Failed to update profile' });
+      setErrorProfile("root", {
+        message: err.response?.data?.message || "Failed to update profile",
+      });
     }
   };
 
   const onPasswordSubmit = async (data: ChangePasswordData) => {
     setSuccessMessage(null);
     try {
-      await api.post('/auth/change-password', {
+      await api.post("/auth/change-password", {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-      setSuccessMessage('Password changed successfully');
+      setSuccessMessage("Password changed successfully");
       resetPassword();
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err: any) {
-      setErrorPassword('root', { message: err.response?.data?.message || 'Failed to change password' });
+      setErrorPassword("root", {
+        message: err.response?.data?.message || "Failed to change password",
+      });
     }
   };
 
@@ -133,25 +154,28 @@ const Settings = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Navigation */}
         <div className="lg:col-span-1 space-y-4">
-          <motion.div variants={staggerItem} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+          <motion.div
+            variants={staggerItem}
+            className="bg-white rounded-xl shadow-sm border border-gray-100 p-4"
+          >
             <nav className="space-y-1">
               <button
-                onClick={() => setActiveTab('profile')}
+                onClick={() => setActiveTab("profile")}
                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  activeTab === 'profile'
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-700 hover:bg-gray-50'
+                  activeTab === "profile"
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <FaUser className="mr-3 h-4 w-4" />
                 Profile Information
               </button>
               <button
-                onClick={() => setActiveTab('security')}
+                onClick={() => setActiveTab("security")}
                 className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  activeTab === 'security'
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-700 hover:bg-gray-50'
+                  activeTab === "security"
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <FaLock className="mr-3 h-4 w-4" />
@@ -163,9 +187,14 @@ const Settings = () => {
 
         {/* Right Column - Forms */}
         <div className="lg:col-span-2">
-          <motion.div variants={staggerItem} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <motion.div
+            variants={staggerItem}
+            className="bg-white rounded-xl shadow-sm border border-gray-100 p-6"
+          >
             <h2 className="text-lg font-medium text-gray-900 mb-6">
-              {activeTab === 'profile' ? 'Profile Information' : 'Security Settings'}
+              {activeTab === "profile"
+                ? "Profile Information"
+                : "Security Settings"}
             </h2>
 
             <AnimatePresence mode="wait">
@@ -182,17 +211,27 @@ const Settings = () => {
               )}
             </AnimatePresence>
 
-            {activeTab === 'profile' ? (
-              <form onSubmit={handleSubmitProfile(onProfileSubmit)} className="space-y-6">
+            {activeTab === "profile" ? (
+              <form
+                onSubmit={handleSubmitProfile(onProfileSubmit)}
+                className="space-y-6"
+              >
                 {/* Avatar URL */}
                 <div>
-                  <label htmlFor="avatarUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="avatarUrl"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Profile Picture URL
                   </label>
                   <div className="flex gap-4 items-center">
                     <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
                       {(user as any)?.avatarUrl ? (
-                        <img src={(user as any).avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                        <img
+                          src={(user as any).avatarUrl}
+                          alt="Avatar"
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         <FaUser className="h-8 w-8 text-gray-400" />
                       )}
@@ -210,61 +249,98 @@ const Settings = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Full Name
+                    </label>
                     <input
                       id="name"
                       type="text"
-                      {...registerProfile('name')}
+                      {...registerProfile("name")}
                       className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
-                    {errorsProfile.name && <p className="mt-1 text-sm text-red-600">{errorsProfile.name.message}</p>}
+                    {errorsProfile.name && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errorsProfile.name.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <label
+                      htmlFor="username"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Username
+                    </label>
                     <div className="flex rounded-md shadow-sm">
-                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">@</span>
+                      <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                        @
+                      </span>
                       <input
                         id="username"
                         type="text"
-                        {...registerProfile('username')}
+                        {...registerProfile("username")}
                         className="flex-1 min-w-0 block w-full px-4 py-2 border rounded-none rounded-r-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       />
                     </div>
-                    {errorsProfile.username && <p className="mt-1 text-sm text-red-600">{errorsProfile.username.message}</p>}
+                    {errorsProfile.username && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errorsProfile.username.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <label
+                      htmlFor="phoneNumber"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Phone Number
+                    </label>
                     <input
                       id="phoneNumber"
                       type="tel"
-                      {...registerProfile('phoneNumber')}
+                      {...registerProfile("phoneNumber")}
                       className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                    <label
+                      htmlFor="gender"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Gender
+                    </label>
                     <select
                       id="gender"
-                      {...registerProfile('gender')}
+                      {...registerProfile("gender")}
                       className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
                       <option value="Other">Other</option>
-                      <option value="Prefer not to say">Prefer not to say</option>
+                      <option value="Prefer not to say">
+                        Prefer not to say
+                      </option>
                     </select>
                   </div>
 
                   <div className="md:col-span-2">
-                    <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                    <label
+                      htmlFor="dob"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Date of Birth
+                    </label>
                     <input
                       id="dob"
                       type="date"
-                      {...registerProfile('dob')}
+                      {...registerProfile("dob")}
                       className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </div>
@@ -289,38 +365,68 @@ const Settings = () => {
                 </div>
               </form>
             ) : (
-              <form onSubmit={handleSubmitPassword(onPasswordSubmit)} className="space-y-6">
+              <form
+                onSubmit={handleSubmitPassword(onPasswordSubmit)}
+                className="space-y-6"
+              >
                 <div>
-                  <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                  <label
+                    htmlFor="currentPassword"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Current Password
+                  </label>
                   <input
                     id="currentPassword"
                     type="password"
-                    {...registerPassword('currentPassword')}
+                    {...registerPassword("currentPassword")}
                     className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
-                  {errorsPassword.currentPassword && <p className="mt-1 text-sm text-red-600">{errorsPassword.currentPassword.message}</p>}
+                  {errorsPassword.currentPassword && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errorsPassword.currentPassword.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <label
+                    htmlFor="newPassword"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    New Password
+                  </label>
                   <input
                     id="newPassword"
                     type="password"
-                    {...registerPassword('newPassword')}
+                    {...registerPassword("newPassword")}
                     className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
-                  {errorsPassword.newPassword && <p className="mt-1 text-sm text-red-600">{errorsPassword.newPassword.message}</p>}
+                  {errorsPassword.newPassword && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errorsPassword.newPassword.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Confirm New Password
+                  </label>
                   <input
                     id="confirmPassword"
                     type="password"
-                    {...registerPassword('confirmPassword')}
+                    {...registerPassword("confirmPassword")}
                     className="block w-full px-4 py-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
-                  {errorsPassword.confirmPassword && <p className="mt-1 text-sm text-red-600">{errorsPassword.confirmPassword.message}</p>}
+                  {errorsPassword.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errorsPassword.confirmPassword.message}
+                    </p>
+                  )}
                 </div>
 
                 {errorsPassword.root && (

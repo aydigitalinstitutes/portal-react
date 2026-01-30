@@ -1,13 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FaCheckCircle } from 'react-icons/fa';
-import { heroHighlights as defaultHeroHighlights, heroStats as defaultHeroStats } from '../../data/content';
-import { scrollToSection } from '../../utils/helpers';
-import { Section, Container } from '../common/Section';
-import AnimatedButton from '../common/AnimatedButton';
-import api from '../../lib/axios';
+import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { FaCheckCircle } from "react-icons/fa";
+import {
+  heroHighlights as defaultHeroHighlights,
+  heroStats as defaultHeroStats,
+} from "../../data/content";
+import { scrollToSection } from "../../utils/helpers";
+import { Section, Container } from "../common/Section";
+import AnimatedButton from "../common/AnimatedButton";
+import api from "../../lib/axios";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,37 +25,49 @@ const Hero = () => {
   const [highlights, setHighlights] = useState(defaultHeroHighlights);
   const [stats, setStats] = useState(defaultHeroStats);
   const [heroContent, setHeroContent] = useState({
-    titlePrefix: 'Learn Computer & Digital Skills — ',
-    titleSuffix: 'Become Job Ready',
-    subtitle: 'AY Digital Institute is a computer training center that helps students and professionals learn practical skills with projects, guidance, and career support.'
+    titlePrefix: "Learn Computer & Digital Skills — ",
+    titleSuffix: "Become Job Ready",
+    subtitle:
+      "AY Digital Institute is a computer training center that helps students and professionals learn practical skills with projects, guidance, and career support.",
   });
 
   useEffect(() => {
     const fetchHeroContent = async () => {
       try {
         const [highlightsRes, statsRes, contentRes] = await Promise.all([
-          api.get('/website-content/items?section=hero_highlights'),
-          api.get('/website-content/items?section=hero_stats'),
-          api.get('/website-content/items?section=hero_content')
+          api.get("/website-content/items?section=hero_highlights"),
+          api.get("/website-content/items?section=hero_stats"),
+          api.get("/website-content/items?section=hero_content"),
         ]);
 
         if (highlightsRes.data && highlightsRes.data.length > 0) {
-           setHighlights(highlightsRes.data.sort((a, b) => a.order - b.order).map(item => item.title));
+          setHighlights(
+            highlightsRes.data
+              .sort((a, b) => a.order - b.order)
+              .map((item) => item.title),
+          );
         }
 
         if (statsRes.data && statsRes.data.length > 0) {
-           setStats(statsRes.data.sort((a, b) => a.order - b.order).map(item => ({
-             value: item.subtitle, // subtitle used for value
-             label: item.title // title used for label
-           })));
+          setStats(
+            statsRes.data
+              .sort((a, b) => a.order - b.order)
+              .map((item) => ({
+                value: item.subtitle, // subtitle used for value
+                label: item.title, // title used for label
+              })),
+          );
         }
 
         if (contentRes.data && contentRes.data.length > 0) {
           const newContent = { ...heroContent };
-          contentRes.data.forEach(item => {
-            if (item.key === 'hero_title_prefix') newContent.titlePrefix = item.title;
-            if (item.key === 'hero_title_suffix') newContent.titleSuffix = item.title;
-            if (item.key === 'hero_subtitle') newContent.subtitle = item.subtitle || item.title;
+          contentRes.data.forEach((item) => {
+            if (item.key === "hero_title_prefix")
+              newContent.titlePrefix = item.title;
+            if (item.key === "hero_title_suffix")
+              newContent.titleSuffix = item.title;
+            if (item.key === "hero_subtitle")
+              newContent.subtitle = item.subtitle || item.title;
           });
           setHeroContent(newContent);
         }
@@ -70,7 +85,7 @@ const Hero = () => {
         opacity: 0,
         y: -50,
         duration: 1,
-        ease: 'power3.out',
+        ease: "power3.out",
       });
 
       // Subtitle animation
@@ -79,7 +94,7 @@ const Hero = () => {
         y: 30,
         duration: 1,
         delay: 0.3,
-        ease: 'power3.out',
+        ease: "power3.out",
       });
 
       // Highlights stagger animation
@@ -90,7 +105,7 @@ const Hero = () => {
         duration: 0.6,
         stagger: 0.1,
         delay: 0.6,
-        ease: 'back.out(1.7)',
+        ease: "back.out(1.7)",
       });
 
       // Buttons animation
@@ -100,7 +115,7 @@ const Hero = () => {
         duration: 0.6,
         stagger: 0.1,
         delay: 1,
-        ease: 'power3.out',
+        ease: "power3.out",
       });
 
       // Stats animation with scroll trigger
@@ -112,10 +127,10 @@ const Hero = () => {
         stagger: 0.15,
         scrollTrigger: {
           trigger: statsRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
+          start: "top 80%",
+          toggleActions: "play none none none",
         },
-        ease: 'back.out(1.7)',
+        ease: "back.out(1.7)",
       });
     }, heroRef);
 
@@ -123,7 +138,11 @@ const Hero = () => {
   }, []);
 
   return (
-    <Section id="home" className="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-20 md:py-28" ref={heroRef}>
+    <Section
+      id="home"
+      className="bg-gradient-to-br from-primary-50 via-white to-primary-50 py-20 md:py-28"
+      ref={heroRef}
+    >
       <Container>
         <div className="max-w-4xl mx-auto text-center">
           {/* Headline */}
@@ -135,20 +154,21 @@ const Hero = () => {
             <motion.span
               className="text-primary-600 inline-block"
               animate={{
-                backgroundPosition: ['0%', '100%'],
+                backgroundPosition: ["0%", "100%"],
               }}
               transition={{
                 duration: 3,
                 repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'linear',
+                repeatType: "reverse",
+                ease: "linear",
               }}
               style={{
-                backgroundImage: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6)',
-                backgroundSize: '200% auto',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
+                backgroundImage:
+                  "linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6)",
+                backgroundSize: "200% auto",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               {heroContent.titleSuffix}
@@ -164,32 +184,44 @@ const Hero = () => {
           </p>
 
           {/* Highlights */}
-          <div ref={highlightsRef} className="flex flex-wrap justify-center gap-4 mb-10">
+          <div
+            ref={highlightsRef}
+            className="flex flex-wrap justify-center gap-4 mb-10"
+          >
             {highlights.map((highlight, index) => (
               <motion.div
                 key={index}
                 className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md border border-primary-100"
-                whileHover={{ scale: 1.1, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+                whileHover={{
+                  scale: 1.1,
+                  y: -5,
+                  boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+                }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <FaCheckCircle className="text-primary-600" />
-                <span className="text-sm font-medium text-gray-700">{highlight}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  {highlight}
+                </span>
               </motion.div>
             ))}
           </div>
 
           {/* Buttons */}
-          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div
+            ref={buttonsRef}
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+          >
             <AnimatedButton
-              onClick={() => scrollToSection('courses')}
+              onClick={() => scrollToSection("courses")}
               variant="primary"
               className="text-lg px-8 py-4"
             >
               Explore Courses
             </AnimatedButton>
             <AnimatedButton
-              onClick={() => scrollToSection('contact')}
+              onClick={() => scrollToSection("contact")}
               variant="secondary"
               className="text-lg px-8 py-4"
             >
@@ -198,13 +230,20 @@ const Hero = () => {
           </div>
 
           {/* Quick Stats */}
-          <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+          <div
+            ref={statsRef}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16"
+          >
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 className="bg-white p-6 rounded-xl shadow-lg border border-primary-100"
-                whileHover={{ y: -10, scale: 1.05, boxShadow: '0 20px 25px rgba(0,0,0,0.1)' }}
-                transition={{ type: 'spring', stiffness: 300 }}
+                whileHover={{
+                  y: -10,
+                  scale: 1.05,
+                  boxShadow: "0 20px 25px rgba(0,0,0,0.1)",
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div
                   className="text-3xl md:text-4xl font-bold text-primary-600 mb-2"
@@ -212,7 +251,7 @@ const Hero = () => {
                   animate={{ scale: 1 }}
                   transition={{
                     delay: index * 0.1,
-                    type: 'spring',
+                    type: "spring",
                     stiffness: 200,
                     damping: 10,
                   }}

@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   FaLaptopCode,
   FaBriefcase,
   FaClock,
   FaRupeeSign,
   FaQuestionCircle,
-} from 'react-icons/fa';
-import { whyChooseUsData as defaultData } from '../../data/content';
-import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
-import api from '../../lib/axios';
+} from "react-icons/fa";
+import { whyChooseUsData as defaultData } from "../../data/content";
+import {
+  Section,
+  SectionTitle,
+  SectionSubtitle,
+  Container,
+} from "../common/Section";
+import api from "../../lib/axios";
 
 const iconMap = {
   FaLaptopCode: FaLaptopCode,
@@ -24,16 +29,22 @@ const WhyChooseUs = () => {
   useEffect(() => {
     const fetchReasons = async () => {
       try {
-        const res = await api.get('/website-content/items?section=why_choose_us');
+        const res = await api.get(
+          "/website-content/items?section=why_choose_us",
+        );
         if (res.data && res.data.length > 0) {
-          setReasons(res.data.sort((a, b) => a.order - b.order).map((item) => ({
-            icon: item.icon,
-            title: item.title,
-            description: item.subtitle
-          })));
+          setReasons(
+            res.data
+              .sort((a, b) => a.order - b.order)
+              .map((item) => ({
+                icon: item.icon,
+                title: item.title,
+                description: item.subtitle,
+              })),
+          );
         }
       } catch (error) {
-        console.error('Failed to fetch why choose us', error);
+        console.error("Failed to fetch why choose us", error);
       }
     };
     fetchReasons();
@@ -42,9 +53,12 @@ const WhyChooseUs = () => {
   return (
     <Section id="why-us" className="bg-white py-20">
       <Container>
-        <SectionTitle className="fade-in-down">Why Students Choose Us</SectionTitle>
+        <SectionTitle className="fade-in-down">
+          Why Students Choose Us
+        </SectionTitle>
         <SectionSubtitle className="fade-in delay-200">
-          We're committed to your success with practical training and personalized support.
+          We're committed to your success with practical training and
+          personalized support.
         </SectionSubtitle>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -57,12 +71,16 @@ const WhyChooseUs = () => {
                 style={{ animationDelay: `${(index + 1) * 0.15}s` }}
               >
                 <div className="flex justify-center mb-4 transition-transform duration-300 hover:scale-110">
-                  {IconComponent && <IconComponent className="text-4xl text-primary-600" />}
+                  {IconComponent && (
+                    <IconComponent className="text-4xl text-primary-600" />
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
                   {reason.title}
                 </h3>
-                <p className="text-gray-600 text-center">{reason.description}</p>
+                <p className="text-gray-600 text-center">
+                  {reason.description}
+                </p>
               </div>
             );
           })}

@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCourseDto, UpdateCourseDto } from './dto/course.dto';
-import { CreateTestimonialDto, UpdateTestimonialDto } from './dto/testimonial.dto';
-import { CreateContentItemDto, UpdateContentItemDto } from './dto/content-item.dto';
+import {
+  CreateTestimonialDto,
+  UpdateTestimonialDto,
+} from './dto/testimonial.dto';
+import {
+  CreateContentItemDto,
+  UpdateContentItemDto,
+} from './dto/content-item.dto';
 
 @Injectable()
 export class WebsiteContentService {
@@ -53,7 +59,10 @@ export class WebsiteContentService {
   // Content Items
   async findAllContentItems(section?: string) {
     if (section) {
-      return this.prisma.contentItem.findMany({ where: { section }, orderBy: { order: 'asc' } });
+      return this.prisma.contentItem.findMany({
+        where: { section },
+        orderBy: { order: 'asc' },
+      });
     }
     return this.prisma.contentItem.findMany({ orderBy: { order: 'asc' } });
   }

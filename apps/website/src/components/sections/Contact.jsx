@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
-import { contactInfo as defaultContactInfo } from '../../data';
-import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
-import api from '../../lib/axios';
+import React, { useState, useEffect } from "react";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { contactInfo as defaultContactInfo } from "../../data";
+import {
+  Section,
+  SectionTitle,
+  SectionSubtitle,
+  Container,
+} from "../common/Section";
+import api from "../../lib/axios";
 
 const iconMap = {
   FaPhone: FaPhone,
@@ -13,10 +18,10 @@ const iconMap = {
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    course: '',
-    message: '',
+    name: "",
+    phone: "",
+    course: "",
+    message: "",
   });
   const [contactInfo, setContactInfo] = useState(defaultContactInfo);
   const [courseList, setCourseList] = useState([]);
@@ -25,26 +30,30 @@ const Contact = () => {
     const fetchData = async () => {
       try {
         const [contactRes, coursesRes] = await Promise.all([
-          api.get('/website-content/items?section=contact'),
-          api.get('/website-content/courses')
+          api.get("/website-content/items?section=contact"),
+          api.get("/website-content/courses"),
         ]);
 
         if (contactRes.data && contactRes.data.length > 0) {
           // Sort by order if available, otherwise keep as is (backend usually returns order)
           // We map to the structure expected by the render loop
-          setContactInfo(contactRes.data.sort((a,b) => a.order - b.order).map(item => ({
-             icon: item.icon,
-             label: item.title,
-             value: item.subtitle,
-             link: item.link
-          })));
+          setContactInfo(
+            contactRes.data
+              .sort((a, b) => a.order - b.order)
+              .map((item) => ({
+                icon: item.icon,
+                label: item.title,
+                value: item.subtitle,
+                link: item.link,
+              })),
+          );
         }
 
         if (coursesRes.data && coursesRes.data.length > 0) {
-          setCourseList(coursesRes.data.map(c => c.title));
+          setCourseList(coursesRes.data.map((c) => c.title));
         }
-      } catch(e) { 
-        console.error('Failed to fetch contact data', e); 
+      } catch (e) {
+        console.error("Failed to fetch contact data", e);
       }
     };
     fetchData();
@@ -59,31 +68,39 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Thank you for your inquiry! We will contact you soon.');
-    setFormData({ name: '', phone: '', course: '', message: '' });
+    console.log("Form submitted:", formData);
+    alert("Thank you for your inquiry! We will contact you soon.");
+    setFormData({ name: "", phone: "", course: "", message: "" });
   };
 
   return (
     <Section id="contact" className="bg-white py-20">
       <Container>
         <SectionTitle className="fade-in-down">Contact Us</SectionTitle>
-        <SectionSubtitle className="fade-in delay-200">Message us to get fees, timings, and course details.</SectionSubtitle>
+        <SectionSubtitle className="fade-in delay-200">
+          Message us to get fees, timings, and course details.
+        </SectionSubtitle>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
           {/* Contact Info */}
           <div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              Get in Touch
+            </h3>
             <div className="space-y-6">
               {contactInfo.map((info, index) => {
                 const IconComponent = iconMap[info.icon];
                 return (
                   <div key={index} className="flex items-start gap-4">
                     <div className="mt-1">
-                      {IconComponent && <IconComponent className="text-2xl text-primary-600" />}
+                      {IconComponent && (
+                        <IconComponent className="text-2xl text-primary-600" />
+                      )}
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 mb-1">{info.label}</p>
+                      <p className="font-semibold text-gray-900 mb-1">
+                        {info.label}
+                      </p>
                       {info.link ? (
                         <a
                           href={info.link}
@@ -103,10 +120,15 @@ const Contact = () => {
 
           {/* Contact Form */}
           <div className="bg-gray-50 p-8 rounded-xl border-2 border-primary-100">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send Inquiry</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              Send Inquiry
+            </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Name
                 </label>
                 <input
@@ -122,7 +144,10 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Phone
                 </label>
                 <input
@@ -138,7 +163,10 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="course" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="course"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Course Interested In
                 </label>
                 <select
@@ -159,7 +187,10 @@ const Contact = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Message
                 </label>
                 <textarea

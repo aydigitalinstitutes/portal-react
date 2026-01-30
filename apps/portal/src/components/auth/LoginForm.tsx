@@ -1,12 +1,17 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaEnvelope, FaLock, FaUserCircle } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { loginSchema, type LoginFormData } from '../../lib/zod-schemas';
-import AnimatedButton from '../common/AnimatedButton';
-import { fadeInUp, staggerContainer, staggerItem, scaleIn } from '../../utils/animations';
-import { useAuth } from '../../context/AuthContext';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaEnvelope, FaLock, FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { loginSchema, type LoginFormData } from "../../lib/zod-schemas";
+import AnimatedButton from "../common/AnimatedButton";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+  scaleIn,
+} from "../../utils/animations";
+import { useAuth } from "../../context/AuthContext";
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -30,10 +35,10 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
       if (onSuccess) {
         onSuccess();
       } else {
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
       }
     } else {
-      setError('root', { message: result.message });
+      setError("root", { message: result.message });
     }
   };
 
@@ -48,11 +53,14 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
         <motion.div
           className="bg-white p-8 rounded-xl shadow-xl border border-primary-100"
           variants={scaleIn}
-          whileHover={{ scale: 1.01, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}
-          transition={{ type: 'spring', stiffness: 300 }}
+          whileHover={{
+            scale: 1.01,
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+          }}
+          transition={{ type: "spring", stiffness: 300 }}
         >
           <motion.div className="text-center mb-8" variants={staggerItem}>
-            <motion.div 
+            <motion.div
               className="flex justify-center mb-4"
               variants={fadeInUp}
             >
@@ -66,10 +74,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
             >
               Welcome Back
             </motion.h2>
-            <motion.p
-              className="mt-2 text-gray-600"
-              variants={fadeInUp}
-            >
+            <motion.p className="mt-2 text-gray-600" variants={fadeInUp}>
               Sign in to your account
             </motion.p>
           </motion.div>
@@ -87,9 +92,16 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
             )}
           </AnimatePresence>
 
-          <motion.form onSubmit={handleSubmit(onSubmit)} className="space-y-6" variants={staggerContainer}>
+          <motion.form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6"
+            variants={staggerContainer}
+          >
             <motion.div variants={staggerItem}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email or Username
               </label>
               <div className="relative">
@@ -99,11 +111,11 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 <motion.input
                   id="email"
                   type="text"
-                  {...register('email')}
+                  {...register("email")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.email 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.email
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Enter your email or username"
                   whileFocus={{ scale: 1.01 }}
@@ -113,7 +125,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 {errors.email && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -125,10 +137,16 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
             <motion.div variants={staggerItem}>
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
-                <a href="#" className="text-sm font-medium text-primary-600 hover:text-primary-500">
+                <a
+                  href="#"
+                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
+                >
                   Forgot password?
                 </a>
               </div>
@@ -139,11 +157,11 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 <motion.input
                   id="password"
                   type="password"
-                  {...register('password')}
+                  {...register("password")}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
-                    errors.password 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                    errors.password
+                      ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      : "border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   }`}
                   placeholder="Enter your password"
                   whileFocus={{ scale: 1.01 }}
@@ -153,7 +171,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 {errors.password && (
                   <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-1 text-sm text-red-600"
                   >
@@ -178,7 +196,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
           <motion.div className="mt-8 text-center" variants={staggerItem}>
             <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link
                 to="/register"
                 className="font-semibold text-primary-600 hover:text-primary-500 transition-colors"

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { FaArrowUp } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { FaArrowUp } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 const BackToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,17 +14,17 @@ const BackToTop: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', toggleVisibility);
+    window.addEventListener("scroll", toggleVisibility);
 
     return () => {
-      window.removeEventListener('scroll', toggleVisibility);
+      window.removeEventListener("scroll", toggleVisibility);
     };
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   };
 

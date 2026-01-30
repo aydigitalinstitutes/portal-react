@@ -1,10 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-import AdminDashboard from './components/dashboard/AdminDashboard';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import AdminDashboard from "./components/dashboard/AdminDashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import "./App.css";
 
 function App() {
   return (

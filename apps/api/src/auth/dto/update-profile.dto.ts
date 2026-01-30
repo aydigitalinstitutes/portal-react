@@ -1,15 +1,30 @@
-import { IsOptional, IsString, MinLength, MaxLength, Matches, IsDateString } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  MinLength,
+  MaxLength,
+  Matches,
+  IsDateString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProfileDto {
-  @ApiProperty({ example: 'John Doe', description: 'The name of the user', required: false })
+  @ApiProperty({
+    example: 'John Doe',
+    description: 'The name of the user',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @MinLength(2)
   @MaxLength(100)
   name?: string;
 
-  @ApiProperty({ example: 'johndoe', description: 'The username of the user', required: false })
+  @ApiProperty({
+    example: 'johndoe',
+    description: 'The username of the user',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   @MinLength(3)
@@ -19,12 +34,20 @@ export class UpdateProfileDto {
   })
   username?: string;
 
-  @ApiProperty({ example: '+1234567890', description: 'The phone number of the user', required: false })
+  @ApiProperty({
+    example: '+1234567890',
+    description: 'The phone number of the user',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   phoneNumber?: string;
 
-  @ApiProperty({ example: '1990-01-01', description: 'Date of birth', required: false })
+  @ApiProperty({
+    example: '1990-01-01',
+    description: 'Date of birth',
+    required: false,
+  })
   @IsOptional()
   @IsDateString()
   dob?: string;
@@ -34,7 +57,11 @@ export class UpdateProfileDto {
   @IsString()
   gender?: string;
 
-  @ApiProperty({ example: 'https://example.com/avatar.jpg', description: 'Avatar URL', required: false })
+  @ApiProperty({
+    example: 'https://example.com/avatar.jpg',
+    description: 'Avatar URL',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   avatarUrl?: string;

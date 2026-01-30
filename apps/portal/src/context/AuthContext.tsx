@@ -1,8 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import type { AxiosError } from 'axios';
-import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useState } from 'react';
-import api from '../lib/axios';
+import type { AxiosError } from "axios";
+import type { ReactNode } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import api from "../lib/axios";
 
 type ApiErrorResponse = {
   success: false;
@@ -45,7 +45,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async (): Promise<void> => {
     try {
-      const response = await api.get('/auth/me');
+      const response = await api.get("/auth/me");
       if (response.data.success) {
         setUser(response.data.user);
         setIsAuthenticated(true);
@@ -78,24 +78,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const login = async (email: string, password: string): Promise<LoginResult> => {
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<LoginResult> => {
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post("/auth/login", { email, password });
 
       if (response.data.success) {
         setUser(response.data.user);
         setIsAuthenticated(true);
         return { success: true, data: response.data.user };
       } else {
-        return { success: false, message: 'Login failed' };
+        return { success: false, message: "Login failed" };
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
-      const message = 
-        axiosError.response?.data?.error?.message ?? 
-        axiosError.response?.data?.message ?? 
-        'Login failed';
-        
+      const message =
+        axiosError.response?.data?.error?.message ??
+        axiosError.response?.data?.message ??
+        "Login failed";
+
       return {
         success: false,
         message,
@@ -105,26 +108,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (data: any): Promise<RegisterResult> => {
     try {
-      const response = await api.post('/auth/register', data);
+      const response = await api.post("/auth/register", data);
 
       if (response.data.success) {
         setUser(response.data.user);
         setIsAuthenticated(true);
         return { success: true, data: response.data.user };
       } else {
-        return { success: false, message: 'Registration failed' };
+        return { success: false, message: "Registration failed" };
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
-      const message = 
-        axiosError.response?.data?.error?.message ?? 
-        axiosError.response?.data?.message ?? 
-        'Registration failed';
-      
-      const errors = 
-        axiosError.response?.data?.error?.details ?? 
+      const message =
+        axiosError.response?.data?.error?.message ??
+        axiosError.response?.data?.message ??
+        "Registration failed";
+
+      const errors =
+        axiosError.response?.data?.error?.details ??
         axiosError.response?.data?.errors;
-        
+
       return {
         success: false,
         message,
@@ -135,9 +138,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async (): Promise<void> => {
     try {
-      await api.post('/auth/logout');
+      await api.post("/auth/logout");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setUser(null);
       setIsAuthenticated(false);
@@ -154,9 +157,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkAuth,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

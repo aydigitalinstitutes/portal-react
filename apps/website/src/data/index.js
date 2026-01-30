@@ -1,5 +1,5 @@
 // Centralized data exports
-export { coursesData, iconMap } from './courses';
+export { coursesData, iconMap } from "./courses";
 export {
   contactInfo,
   reviewsData,
@@ -7,4 +7,4 @@ export {
   aboutFeaturesData,
   heroHighlights,
   heroStats,
-} from './content';
+} from "./content";

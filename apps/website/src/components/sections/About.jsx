@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   FaUserFriends,
   FaHandsHelping,
   FaUsers,
   FaCertificate,
-} from 'react-icons/fa';
-import { aboutFeaturesData as defaultFeatures } from '../../data/content';
-import { Section, SectionTitle, Container } from '../common/Section';
-import api from '../../lib/axios';
+} from "react-icons/fa";
+import { aboutFeaturesData as defaultFeatures } from "../../data/content";
+import { Section, SectionTitle, Container } from "../common/Section";
+import api from "../../lib/axios";
 
 const iconMap = {
   FaUserFriends: FaUserFriends,
@@ -19,37 +19,46 @@ const iconMap = {
 const About = () => {
   const [features, setFeatures] = useState(defaultFeatures);
   const [content, setContent] = useState({
-    description: 'AY Digital Institute provides practical computer education for students, job seekers, and working professionals. We focus on step-by-step learning, real assignments, and personal support so you can confidently use skills in real life or at work.',
-    nielitTitle: 'NIELIT Certified Courses',
-    nielitDescription: 'We offer NIELIT (National Institute of Electronics & Information Technology) courses — a Government of India organisation under the Ministry of Electronics & Information Technology (MeitY). Our courses range from basic digital literacy (ACC, BCC, CCC) to advanced professional certifications (O/A/B/C Level) and short-term skill boost programs. All certifications are government-recognized and nationally valid, making them valuable for job applications and career advancement.'
+    description:
+      "AY Digital Institute provides practical computer education for students, job seekers, and working professionals. We focus on step-by-step learning, real assignments, and personal support so you can confidently use skills in real life or at work.",
+    nielitTitle: "NIELIT Certified Courses",
+    nielitDescription:
+      "We offer NIELIT (National Institute of Electronics & Information Technology) courses — a Government of India organisation under the Ministry of Electronics & Information Technology (MeitY). Our courses range from basic digital literacy (ACC, BCC, CCC) to advanced professional certifications (O/A/B/C Level) and short-term skill boost programs. All certifications are government-recognized and nationally valid, making them valuable for job applications and career advancement.",
   });
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         const [featuresRes, contentRes] = await Promise.all([
-          api.get('/website-content/items?section=about_features'),
-          api.get('/website-content/items?section=about_content')
+          api.get("/website-content/items?section=about_features"),
+          api.get("/website-content/items?section=about_content"),
         ]);
 
         if (featuresRes.data && featuresRes.data.length > 0) {
-          setFeatures(featuresRes.data.sort((a, b) => a.order - b.order).map(item => ({
-            icon: item.icon,
-            text: item.title
-          })));
+          setFeatures(
+            featuresRes.data
+              .sort((a, b) => a.order - b.order)
+              .map((item) => ({
+                icon: item.icon,
+                text: item.title,
+              })),
+          );
         }
 
         if (contentRes.data && contentRes.data.length > 0) {
           const newContent = { ...content };
-          contentRes.data.forEach(item => {
-            if (item.key === 'about_description') newContent.description = item.subtitle || item.title;
-            if (item.key === 'nielit_title') newContent.nielitTitle = item.title;
-            if (item.key === 'nielit_description') newContent.nielitDescription = item.subtitle || item.title;
+          contentRes.data.forEach((item) => {
+            if (item.key === "about_description")
+              newContent.description = item.subtitle || item.title;
+            if (item.key === "nielit_title")
+              newContent.nielitTitle = item.title;
+            if (item.key === "nielit_description")
+              newContent.nielitDescription = item.subtitle || item.title;
           });
           setContent(newContent);
         }
       } catch (error) {
-        console.error('Failed to fetch about content', error);
+        console.error("Failed to fetch about content", error);
       }
     };
     fetchContent();
@@ -58,7 +67,9 @@ const About = () => {
     <Section id="about" className="bg-gray-50 py-20">
       <Container>
         <div className="max-w-4xl mx-auto">
-          <SectionTitle className="fade-in-down">About AY Digital Institute</SectionTitle>
+          <SectionTitle className="fade-in-down">
+            About AY Digital Institute
+          </SectionTitle>
           <p className="text-lg text-gray-700 mb-6 text-center leading-relaxed fade-in delay-200">
             {content.description}
           </p>
@@ -66,7 +77,7 @@ const About = () => {
             <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
               {content.nielitTitle}
             </h3>
-            <p 
+            <p
               className="text-gray-700 text-center leading-relaxed"
               dangerouslySetInnerHTML={{ __html: content.nielitDescription }}
             />
@@ -83,7 +94,9 @@ const About = () => {
                   style={{ animationDelay: `${(index + 1) * 0.15}s` }}
                 >
                   <div className="flex justify-center mb-4">
-                    {IconComponent && <IconComponent className="text-3xl text-primary-600" />}
+                    {IconComponent && (
+                      <IconComponent className="text-3xl text-primary-600" />
+                    )}
                   </div>
                   <p className="text-gray-700 font-medium">{feature.text}</p>
                 </div>

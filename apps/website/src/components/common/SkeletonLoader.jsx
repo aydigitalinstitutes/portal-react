@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const SkeletonLoader = ({ className = '', count = 1 }) => {
+const SkeletonLoader = ({ className = "", count = 1 }) => {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
@@ -14,14 +14,14 @@ const SkeletonLoader = ({ className = '', count = 1 }) => {
           <motion.div
             animate={{
               background: [
-                'linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%)',
-                'linear-gradient(90deg, #e0e0e0 0%, #f0f0f0 50%, #e0e0e0 100%)',
+                "linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%)",
+                "linear-gradient(90deg, #e0e0e0 0%, #f0f0f0 50%, #e0e0e0 100%)",
               ],
             }}
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              ease: 'linear',
+              ease: "linear",
             }}
             className="h-full w-full rounded-lg"
           />
@@ -44,7 +44,7 @@ export const SkeletonText = ({ lines = 3 }) => (
     {Array.from({ length: lines }).map((_, index) => (
       <SkeletonLoader
         key={index}
-        className={`h-4 ${index === lines - 1 ? 'w-3/4' : 'w-full'}`}
+        className={`h-4 ${index === lines - 1 ? "w-3/4" : "w-full"}`}
       />
     ))}
   </div>

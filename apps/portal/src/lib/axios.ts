@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/v1',
+  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5001/api/v1",
   withCredentials: true, // Send cookies
 });
 
@@ -19,19 +19,19 @@ api.interceptors.response.use(
 
       try {
         // Try to refresh token
-        const refreshResponse = await api.post('/auth/refresh');
+        const refreshResponse = await api.post("/auth/refresh");
         if (refreshResponse.data.success) {
           return api(originalRequest);
         }
       } catch (refreshError) {
         // Refresh failed, redirect to login
-        window.location.href = '/login';
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

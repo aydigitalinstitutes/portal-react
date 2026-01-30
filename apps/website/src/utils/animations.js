@@ -15,27 +15,27 @@ export const pageVariants = {
 };
 
 export const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
+  type: "tween",
+  ease: "anticipate",
   duration: 0.4,
 };
 
 export const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: 'easeOut' },
+  transition: { duration: 0.5, ease: "easeOut" },
 };
 
 export const fadeInDown = {
   initial: { opacity: 0, y: -30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: 'easeOut' },
+  transition: { duration: 0.5, ease: "easeOut" },
 };
 
 export const scaleIn = {
   initial: { opacity: 0, scale: 0.9 },
   animate: { opacity: 1, scale: 1 },
-  transition: { duration: 0.4, ease: 'easeOut' },
+  transition: { duration: 0.4, ease: "easeOut" },
 };
 
 export const staggerContainer = {

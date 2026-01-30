@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import {
   FaLaptop,
   FaFileExcel,
@@ -16,10 +16,13 @@ import {
   FaWifi,
   FaBullhorn,
   FaUniversity,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 // Icon component mapper
-export const getIconComponent = (iconName, className = 'text-4xl text-primary-600') => {
+export const getIconComponent = (
+  iconName,
+  className = "text-4xl text-primary-600",
+) => {
   const icons = {
     FaLaptop: <FaLaptop className={className} />,
     FaFileExcel: <FaFileExcel className={className} />,
@@ -48,19 +51,19 @@ export const CourseCard = ({ course, getIcon, index = 0 }) => {
       className="bg-white border-2 border-gray-200 rounded-xl p-6 flex flex-col group"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       whileHover={{
         y: -8,
         scale: 1.02,
-        borderColor: '#3b82f6',
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
+        borderColor: "#3b82f6",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
       }}
     >
       <motion.div
         className="flex justify-center mb-4"
         whileHover={{ scale: 1.15, rotate: 5 }}
-        transition={{ type: 'spring', stiffness: 300 }}
+        transition={{ type: "spring", stiffness: 300 }}
       >
         {getIcon(course.icon)}
       </motion.div>

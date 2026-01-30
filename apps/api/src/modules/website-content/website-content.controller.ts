@@ -1,9 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { WebsiteContentService } from './website-content.service';
 import { CreateCourseDto, UpdateCourseDto } from './dto/course.dto';
-import { CreateTestimonialDto, UpdateTestimonialDto } from './dto/testimonial.dto';
-import { CreateContentItemDto, UpdateContentItemDto } from './dto/content-item.dto';
+import {
+  CreateTestimonialDto,
+  UpdateTestimonialDto,
+} from './dto/testimonial.dto';
+import {
+  CreateContentItemDto,
+  UpdateContentItemDto,
+} from './dto/content-item.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/roles.decorator';
@@ -30,7 +52,10 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Create a new course' })
-  @ApiResponse({ status: 201, description: 'The course has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The course has been successfully created.',
+  })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiBearerAuth()
   @Post('courses')
@@ -41,7 +66,10 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Update a course' })
-  @ApiResponse({ status: 200, description: 'The course has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The course has been successfully updated.',
+  })
   @ApiBearerAuth()
   @Patch('courses/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -51,7 +79,10 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Delete a course' })
-  @ApiResponse({ status: 200, description: 'The course has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The course has been successfully deleted.',
+  })
   @ApiBearerAuth()
   @Delete('courses/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -76,7 +107,10 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Create a new testimonial' })
-  @ApiResponse({ status: 201, description: 'The testimonial has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The testimonial has been successfully created.',
+  })
   @ApiBearerAuth()
   @Post('testimonials')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -86,17 +120,26 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Update a testimonial' })
-  @ApiResponse({ status: 200, description: 'The testimonial has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The testimonial has been successfully updated.',
+  })
   @ApiBearerAuth()
   @Patch('testimonials/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'SUPER_ADMIN')
-  updateTestimonial(@Param('id') id: string, @Body() dto: UpdateTestimonialDto) {
+  updateTestimonial(
+    @Param('id') id: string,
+    @Body() dto: UpdateTestimonialDto,
+  ) {
     return this.websiteContentService.updateTestimonial(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete a testimonial' })
-  @ApiResponse({ status: 200, description: 'The testimonial has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The testimonial has been successfully deleted.',
+  })
   @ApiBearerAuth()
   @Delete('testimonials/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -108,7 +151,11 @@ export class WebsiteContentController {
   // Content Items
   @ApiOperation({ summary: 'Get all content items' })
   @ApiResponse({ status: 200, description: 'Return all content items.' })
-  @ApiQuery({ name: 'section', required: false, description: 'Filter by section' })
+  @ApiQuery({
+    name: 'section',
+    required: false,
+    description: 'Filter by section',
+  })
   @Get('items')
   findAllContentItems(@Query('section') section?: string) {
     return this.websiteContentService.findAllContentItems(section);
@@ -122,7 +169,10 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Create a new content item' })
-  @ApiResponse({ status: 201, description: 'The content item has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The content item has been successfully created.',
+  })
   @ApiBearerAuth()
   @Post('items')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -132,17 +182,26 @@ export class WebsiteContentController {
   }
 
   @ApiOperation({ summary: 'Update a content item' })
-  @ApiResponse({ status: 200, description: 'The content item has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The content item has been successfully updated.',
+  })
   @ApiBearerAuth()
   @Patch('items/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'SUPER_ADMIN')
-  updateContentItem(@Param('id') id: string, @Body() dto: UpdateContentItemDto) {
+  updateContentItem(
+    @Param('id') id: string,
+    @Body() dto: UpdateContentItemDto,
+  ) {
     return this.websiteContentService.updateContentItem(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete a content item' })
-  @ApiResponse({ status: 200, description: 'The content item has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The content item has been successfully deleted.',
+  })
   @ApiBearerAuth()
   @Delete('items/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)

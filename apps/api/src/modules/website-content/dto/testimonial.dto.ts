@@ -1,13 +1,25 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTestimonialDto {
-  @ApiProperty({ example: 'This course was amazing!', description: 'The testimonial text' })
+  @ApiProperty({
+    example: 'This course was amazing!',
+    description: 'The testimonial text',
+  })
   @IsNotEmpty()
   @IsString()
   text: string;
 
-  @ApiProperty({ example: 'John Doe', description: 'The author of the testimonial' })
+  @ApiProperty({
+    example: 'John Doe',
+    description: 'The author of the testimonial',
+  })
   @IsNotEmpty()
   @IsString()
   author: string;
@@ -22,7 +34,11 @@ export class CreateTestimonialDto {
   @IsNumber()
   order?: number;
 
-  @ApiProperty({ example: true, description: 'Whether the testimonial is active', required: false })
+  @ApiProperty({
+    example: true,
+    description: 'Whether the testimonial is active',
+    required: false,
+  })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;

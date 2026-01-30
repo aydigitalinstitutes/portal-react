@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -26,7 +26,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // We allow all authenticated users for now, as this is a general portal
-  // if (user?.role !== 'ADMIN') { ... } 
+  // if (user?.role !== 'ADMIN') { ... }
 
   return <>{children}</>;
 };
