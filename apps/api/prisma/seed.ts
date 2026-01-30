@@ -480,6 +480,33 @@ const footerItems = [
   { title: 'Contact', link: 'contact', order: 3 },
 ];
 
+const seoContent = [
+  {
+    key: 'meta_title',
+    title: 'Meta Title',
+    subtitle: 'AY Digital Institute - Computer Training Center',
+    section: 'seo'
+  },
+  {
+    key: 'meta_description',
+    title: 'Meta Description',
+    subtitle: 'Learn practical computer skills, NIELIT courses, and professional certifications at AY Digital Institute.',
+    section: 'seo'
+  },
+  {
+    key: 'meta_keywords',
+    title: 'Meta Keywords',
+    subtitle: 'computer course, nielit, ccc, o level, python, web development',
+    section: 'seo'
+  },
+  {
+    key: 'og_image',
+    title: 'OG Image URL',
+    subtitle: 'https://placehold.co/1200x630',
+    section: 'seo'
+  }
+];
+
 const main = async () => {
   const passwordHash = await bcrypt.hash('password123', 10);
   const adminPasswordHash = await bcrypt.hash('admin123', 10);
@@ -785,6 +812,24 @@ const main = async () => {
           title: item.title,
           link: item.link,
           order: item.order,
+        },
+      });
+    }
+  }
+
+  // SEO Content
+  console.log('Seeding SEO content...');
+  for (const item of seoContent) {
+    const exists = await prisma.contentItem.findFirst({
+      where: { section: item.section, key: item.key },
+    });
+    if (!exists) {
+      await prisma.contentItem.create({
+        data: {
+          section: item.section,
+          key: item.key,
+          title: item.title,
+          subtitle: item.subtitle,
         },
       });
     }

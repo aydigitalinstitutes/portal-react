@@ -11,6 +11,7 @@ import {
   FaSave,
   FaTimes,
   FaPalette,
+  FaSearch,
 } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import api from "../../lib/axios";
@@ -48,7 +49,7 @@ interface Course {
 
 const WebsiteManagement = () => {
   const [activeTab, setActiveTab] = useState<
-    "navbar" | "footer" | "content" | "courses" | "theme"
+    "navbar" | "footer" | "content" | "courses" | "theme" | "seo"
   >("navbar");
   const [selectedSection, setSelectedSection] = useState("hero_highlights");
   const [items, setItems] = useState<ContentItem[]>([]);
@@ -73,6 +74,9 @@ const WebsiteManagement = () => {
         setItems(res.data.data);
       } else if (activeTab === "theme") {
         const res = await api.get("/website-content/items?section=theme");
+        setItems(res.data.data);
+      } else if (activeTab === "seo") {
+        const res = await api.get("/website-content/items?section=seo");
         setItems(res.data.data);
       } else {
         const res = await api.get(
@@ -173,6 +177,12 @@ const WebsiteManagement = () => {
                 icon={FaPalette}
                 label="Theme Settings"
               />
+              <NavButton
+                active={activeTab === "seo"}
+                onClick={() => setActiveTab("seo")}
+                icon={FaSearch}
+                label="SEO Settings"
+              />
             </nav>
           </motion.div>
         </div>
@@ -189,7 +199,9 @@ const WebsiteManagement = () => {
                   ? "Page Content"
                   : activeTab === "theme"
                     ? "Theme Settings"
-                    : activeTab + " Management"}
+                    : activeTab === "seo"
+                      ? "SEO Settings"
+                      : activeTab + " Management"}
               </span>
               {activeTab === "content" && (
                 <select
@@ -228,7 +240,7 @@ const WebsiteManagement = () => {
                         onDelete={() => handleDelete(course.id)}
                       />
                     ))
-                  : activeTab === "theme"
+                  : activeTab === "theme" || activeTab === "seo"
                     ? items.map((item) => (
                         <ThemeItem
                           key={item.id}
@@ -645,12 +657,16 @@ const ItemModal = ({
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {activeTab === "theme" ? "Setting Name" : "Title / Label"}
+                  {activeTab === "theme"
+                    ? "Setting Name"
+                    : activeTab === "seo"
+                      ? "Meta Tag Name"
+                      : "Title / Label"}
                 </label>
                 <input
                   {...register("title")}
-                  readOnly={activeTab === "theme"}
-                  className={`block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 ${activeTab === "theme" ? "bg-gray-100" : ""}`}
+                  readOnly={activeTab === "theme" || activeTab === "seo"}
+                  className={`block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 ${activeTab === "theme" || activeTab === "seo" ? "bg-gray-100" : ""}`}
                 />
               </div>
 
@@ -704,6 +720,26 @@ const ItemModal = ({
                 </div>
               )}
 
+              {activeTab === "seo" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Value
+                  </label>
+                  {editingItem?.key === "meta_description" ? (
+                    <textarea
+                      {...register("subtitle")}
+                      rows={4}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+                    />
+                  ) : (
+                    <input
+                      {...register("subtitle")}
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+                    />
+                  )}
+                </div>
+              )}
+
               {activeTab === "content" && (
                 <>
                   <div>
@@ -729,7 +765,7 @@ const ItemModal = ({
                 </>
               )}
 
-              {activeTab !== "theme" && (
+              {activeTab !== "theme" && activeTab !== "seo" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Order

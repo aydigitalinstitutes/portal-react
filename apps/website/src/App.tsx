@@ -7,6 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { HelmetProvider } from "react-helmet-async";
 import { useScrollAnimation } from "./utils/useScrollAnimation";
 import api from "./lib/axios";
 
@@ -15,6 +16,7 @@ import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
 import BackToTop from "./components/common/BackToTop";
+import SEOManager from "./components/common/SEOManager";
 
 // Page Components
 import Home from "./pages/Home";
@@ -96,25 +98,28 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="App font-sans text-gray-900">
-      <Header />
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route
-            path="/"
-            element={
-              <AnimatedPage>
-                <Home />
-              </AnimatedPage>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AnimatePresence>
-      <Footer />
-      <WhatsAppButton />
-      <BackToTop />
-    </div>
+    <HelmetProvider>
+      <SEOManager />
+      <div className="App font-sans text-gray-900">
+        <Header />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <AnimatedPage>
+                  <Home />
+                </AnimatedPage>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
+        <Footer />
+        <WhatsAppButton />
+        <BackToTop />
+      </div>
+    </HelmetProvider>
   );
 }
 
