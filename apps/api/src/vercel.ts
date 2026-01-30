@@ -13,6 +13,10 @@ import express from 'express';
 
 const server = express();
 
+server.get('/health-lite', (_req, res) => {
+  res.status(200).json({ ok: true, timestamp: new Date().toISOString() });
+});
+
 export const createNestServer = async (expressInstance: express.Express) => {
   const app = await NestFactory.create(
     AppModule,
