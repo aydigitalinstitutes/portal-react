@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
-import { contactInfo as contactInfoData, coursesData } from '../../data';
-import { getCourseList } from '../../utils/helpers';
+import { contactInfo as defaultContactInfo } from '../../data';
 import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
+import api from '../../lib/axios';
 
 const iconMap = {
   FaPhone: FaPhone,
@@ -18,6 +18,37 @@ const Contact = () => {
     course: '',
     message: '',
   });
+  const [contactInfo, setContactInfo] = useState(defaultContactInfo);
+  const [courseList, setCourseList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [contactRes, coursesRes] = await Promise.all([
+          api.get('/website-content/items?section=contact'),
+          api.get('/website-content/courses')
+        ]);
+
+        if (contactRes.data && contactRes.data.length > 0) {
+          // Sort by order if available, otherwise keep as is (backend usually returns order)
+          // We map to the structure expected by the render loop
+          setContactInfo(contactRes.data.sort((a,b) => a.order - b.order).map(item => ({
+             icon: item.icon,
+             label: item.title,
+             value: item.subtitle,
+             link: item.link
+          })));
+        }
+
+        if (coursesRes.data && coursesRes.data.length > 0) {
+          setCourseList(coursesRes.data.map(c => c.title));
+        }
+      } catch(e) { 
+        console.error('Failed to fetch contact data', e); 
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -33,8 +64,6 @@ const Contact = () => {
     setFormData({ name: '', phone: '', course: '', message: '' });
   };
 
-  const courses = getCourseList(coursesData);
-
   return (
     <Section id="contact" className="bg-white py-20">
       <Container>
@@ -46,7 +75,7 @@ const Contact = () => {
           <div>
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h3>
             <div className="space-y-6">
-              {contactInfoData.map((info, index) => {
+              {contactInfo.map((info, index) => {
                 const IconComponent = iconMap[info.icon];
                 return (
                   <div key={index} className="flex items-start gap-4">
@@ -121,7 +150,7 @@ const Contact = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 >
                   <option value="">Select a course</option>
-                  {courses.map((course, index) => (
+                  {courseList.map((course, index) => (
                     <option key={index} value={course}>
                       {course}
                     </option>

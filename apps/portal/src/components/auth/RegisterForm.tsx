@@ -134,6 +134,41 @@ const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             </motion.div>
 
             <motion.div variants={staggerItem}>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Username (Optional)
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaUser className="text-gray-400" />
+                </div>
+                <motion.input
+                  id="username"
+                  type="text"
+                  {...register('username')}
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
+                    errors.username 
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                      : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
+                  }`}
+                  placeholder="Choose a username"
+                  whileFocus={{ scale: 1.01 }}
+                />
+              </div>
+              <AnimatePresence>
+                {errors.username && (
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-1 text-sm text-red-600"
+                  >
+                    {errors.username.message}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            <motion.div variants={staggerItem}>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>

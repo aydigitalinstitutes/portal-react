@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --primary-h: 199;
+    --primary-s: 89%;
+    --primary-l: 48%;
+  }
+
   html {
     scroll-behavior: smooth;
   }

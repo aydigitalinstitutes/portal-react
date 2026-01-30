@@ -10,18 +10,42 @@ export class UsersRepository {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  findByEmailOrUsername(identifier: string) {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: identifier }, { username: identifier }],
+      },
+    });
+  }
+
   findById(id: string) {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  createLocal(data: { email: string; name: string; passwordHash: string }) {
+  createLocal(data: { email: string; name: string; passwordHash: string; username?: string }) {
     return this.prisma.user.create({
       data: {
         email: data.email,
         name: data.name,
         passwordHash: data.passwordHash,
+        username: data.username,
         provider: 'LOCAL',
       },
+    });
+  }
+
+  update(id: string, data: {
+    name?: string;
+    username?: string;
+    phoneNumber?: string;
+    dob?: Date;
+    gender?: string;
+    avatarData?: Buffer;
+    avatarMimeType?: string;
+  }) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
     });
   }
 

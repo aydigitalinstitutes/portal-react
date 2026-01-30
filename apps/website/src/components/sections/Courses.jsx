@@ -1,24 +1,56 @@
-import React from 'react';
-import { coursesData } from '../../data/courses';
+import React, { useState, useEffect } from 'react';
+import { coursesData as defaultCoursesData } from '../../data/courses';
 import { scrollToSection } from '../../utils/helpers';
 import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
 import { CourseCard, getIconComponent } from '../common/CourseCard';
+import api from '../../lib/axios';
 
 const Courses = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [description, setDescription] = useState('Choose from basic to advanced courses — NIELIT certified courses (ACC, BCC, CCC, O/A/B/C Level), professional diplomas (DCA, ADCA), and modern skill courses (Python, AI, IoT, Digital Marketing). Perfect for beginners, job seekers, and professionals. All NIELIT certifications are government-recognized and nationally valid.');
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const [coursesRes, contentRes] = await Promise.all([
+          api.get('/website-content/courses'),
+          api.get('/website-content/items?section=courses_content')
+        ]);
+
+        if (coursesRes.data && coursesRes.data.length > 0) {
+          setCourses(coursesRes.data);
+        } else {
+          setCourses(defaultCoursesData);
+        }
+
+        if (contentRes.data && contentRes.data.length > 0) {
+          const descItem = contentRes.data.find((item) => item.key === 'courses_description' || item.title === 'Description');
+          if (descItem) {
+             setDescription(descItem.subtitle || descItem.title);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch courses", error);
+        setCourses(defaultCoursesData);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
+
   return (
     <Section id="courses" className="bg-white py-20">
       <Container>
         <SectionTitle className="fade-in-down">Our Courses</SectionTitle>
         <SectionSubtitle className="fade-in delay-200">
-          Choose from basic to advanced courses — NIELIT certified courses (ACC, BCC, CCC, O/A/B/C Level),
-          professional diplomas (DCA, ADCA), and modern skill courses (Python, AI, IoT, Digital Marketing).
-          Perfect for beginners, job seekers, and professionals. All NIELIT certifications are
-          government-recognized and nationally valid.
+          {description}
         </SectionSubtitle>
 
         {/* Course Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {coursesData.map((course, index) => (
+          {!loading && courses.map((course, index) => (
             <CourseCard
               key={course.id}
               course={course}
@@ -26,6 +58,12 @@ const Courses = () => {
               index={index}
             />
           ))}
+          {loading && (
+             <div className="col-span-full text-center py-10">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600"></div>
+                <p className="mt-2 text-gray-500">Loading courses...</p>
+             </div>
+          )}
         </div>
 
         {/* CTA */}
@@ -41,5 +79,6 @@ const Courses = () => {
     </Section>
   );
 };
+
 
 export default Courses;

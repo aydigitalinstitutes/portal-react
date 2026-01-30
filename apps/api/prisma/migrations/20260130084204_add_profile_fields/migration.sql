@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "dob" TIMESTAMP(3),
+ADD COLUMN     "gender" TEXT,
+ADD COLUMN     "phoneNumber" TEXT;

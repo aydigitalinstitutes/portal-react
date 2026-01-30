@@ -1,10 +1,11 @@
 import { useAuth } from '../../context/AuthContext';
-import { FaUsers, FaGraduationCap, FaChartBar, FaCog, FaSignOutAlt, FaBookOpen, FaUserGraduate, FaBell, FaSearch, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUsers, FaGraduationCap, FaChartBar, FaCog, FaSignOutAlt, FaBookOpen, FaUserGraduate, FaBell, FaSearch, FaBars, FaTimes, FaGlobe } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fadeInUp, staggerContainer, staggerItem } from '../../utils/animations';
 import { useState } from 'react';
 import StudentOverview from './StudentOverview';
-
+import Settings from './Settings';
+import WebsiteManagement from './WebsiteManagement';
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
@@ -53,7 +54,7 @@ const AdminDashboard = () => {
     }
   ];
 
-  const menuItems = ['Overview', 'Students', 'Courses', 'Analytics', 'Settings']
+  const menuItems = ['Overview', 'Students', 'Courses', 'Analytics', 'Website', 'Settings']
     .filter(item => {
       if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return true;
       if (user?.role === 'TEACHER') return ['Overview', 'Students', 'Courses'].includes(item);
@@ -88,6 +89,7 @@ const AdminDashboard = () => {
             {item === 'Students' && <FaUsers className="mr-3 h-5 w-5" />}
             {item === 'Courses' && <FaBookOpen className="mr-3 h-5 w-5" />}
             {item === 'Analytics' && <FaGraduationCap className="mr-3 h-5 w-5" />}
+            {item === 'Website' && <FaGlobe className="mr-3 h-5 w-5" />}
             {item === 'Settings' && <FaCog className="mr-3 h-5 w-5" />}
             {item}
           </button>
@@ -194,7 +196,11 @@ const AdminDashboard = () => {
 
         {/* Dashboard Content */}
         <main className="flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-6 lg:p-8">
-          {(user?.role === 'USER' || user?.role === 'STUDENT') && activeTab === 'overview' ? (
+          {activeTab === 'settings' ? (
+            <Settings />
+          ) : activeTab === 'website' ? (
+            <WebsiteManagement />
+          ) : (user?.role === 'USER' || user?.role === 'STUDENT') && activeTab === 'overview' ? (
             <StudentOverview />
           ) : (
             <motion.div

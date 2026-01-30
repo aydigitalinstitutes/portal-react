@@ -13,6 +13,8 @@ import { AdminModule } from './modules/admin/admin.module';
 import { HealthModule } from './modules/health/health.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
 import { initSentry } from './shared/sentry';
+import { WebsiteContentModule } from './modules/website-content/website-content.module';
+import { LessonPlansModule } from './modules/lesson-plans/lesson-plans.module';
 
 @Module({
   imports: [
@@ -71,6 +73,8 @@ import { initSentry } from './shared/sentry';
     AdminModule,
     HealthModule,
     MetricsModule,
+    WebsiteContentModule,
+    LessonPlansModule,
   ],
   controllers: [AppController],
   providers: [

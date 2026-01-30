@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaUserFriends,
   FaHandsHelping,
   FaUsers,
   FaCertificate,
 } from 'react-icons/fa';
-import { aboutFeaturesData } from '../../data/content';
+import { aboutFeaturesData as defaultFeatures } from '../../data/content';
 import { Section, SectionTitle, Container } from '../common/Section';
+import api from '../../lib/axios';
 
 const iconMap = {
   FaUserFriends: FaUserFriends,
@@ -16,32 +17,64 @@ const iconMap = {
 };
 
 const About = () => {
+  const [features, setFeatures] = useState(defaultFeatures);
+  const [content, setContent] = useState({
+    description: 'AY Digital Institute provides practical computer education for students, job seekers, and working professionals. We focus on step-by-step learning, real assignments, and personal support so you can confidently use skills in real life or at work.',
+    nielitTitle: 'NIELIT Certified Courses',
+    nielitDescription: 'We offer NIELIT (National Institute of Electronics & Information Technology) courses — a Government of India organisation under the Ministry of Electronics & Information Technology (MeitY). Our courses range from basic digital literacy (ACC, BCC, CCC) to advanced professional certifications (O/A/B/C Level) and short-term skill boost programs. All certifications are government-recognized and nationally valid, making them valuable for job applications and career advancement.'
+  });
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const [featuresRes, contentRes] = await Promise.all([
+          api.get('/website-content/items?section=about_features'),
+          api.get('/website-content/items?section=about_content')
+        ]);
+
+        if (featuresRes.data && featuresRes.data.length > 0) {
+          setFeatures(featuresRes.data.sort((a, b) => a.order - b.order).map(item => ({
+            icon: item.icon,
+            text: item.title
+          })));
+        }
+
+        if (contentRes.data && contentRes.data.length > 0) {
+          const newContent = { ...content };
+          contentRes.data.forEach(item => {
+            if (item.key === 'about_description') newContent.description = item.subtitle || item.title;
+            if (item.key === 'nielit_title') newContent.nielitTitle = item.title;
+            if (item.key === 'nielit_description') newContent.nielitDescription = item.subtitle || item.title;
+          });
+          setContent(newContent);
+        }
+      } catch (error) {
+        console.error('Failed to fetch about content', error);
+      }
+    };
+    fetchContent();
+  }, []);
   return (
     <Section id="about" className="bg-gray-50 py-20">
       <Container>
         <div className="max-w-4xl mx-auto">
           <SectionTitle className="fade-in-down">About AY Digital Institute</SectionTitle>
           <p className="text-lg text-gray-700 mb-6 text-center leading-relaxed fade-in delay-200">
-            AY Digital Institute provides practical computer education for students, job seekers, and
-            working professionals. We focus on step-by-step learning, real assignments, and personal
-            support so you can confidently use skills in real life or at work.
+            {content.description}
           </p>
           <div className="bg-white p-6 rounded-xl shadow-md mb-8 border-l-4 border-primary-600 fade-in delay-300 hover:shadow-lg transition-all duration-300">
             <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
-              NIELIT Certified Courses
+              {content.nielitTitle}
             </h3>
-            <p className="text-gray-700 text-center leading-relaxed">
-              We offer <strong>NIELIT (National Institute of Electronics & Information Technology)</strong> courses
-              — a Government of India organisation under the Ministry of Electronics & Information Technology (MeitY).
-              Our courses range from basic digital literacy (ACC, BCC, CCC) to advanced professional certifications
-              (O/A/B/C Level) and short-term skill boost programs. All certifications are <strong>government-recognized
-              and nationally valid</strong>, making them valuable for job applications and career advancement.
-            </p>
+            <p 
+              className="text-gray-700 text-center leading-relaxed"
+              dangerouslySetInnerHTML={{ __html: content.nielitDescription }}
+            />
           </div>
 
           {/* Feature Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {aboutFeaturesData.map((feature, index) => {
+            {features.map((feature, index) => {
               const IconComponent = iconMap[feature.icon];
               return (
                 <div

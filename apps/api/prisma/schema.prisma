@@ -10,12 +10,18 @@ datasource db {
 model User {
   id            String       @id @default(uuid())
   email         String       @unique
+  username      String?      @unique
   passwordHash  String?
   name          String
   role          String       @default("USER")
   provider      String       @default("LOCAL")
   providerId    String?
+  phoneNumber   String?
+  dob           DateTime?
+  gender        String?
   avatarUrl     String?
+  avatarData    Bytes?
+  avatarMimeType String?
   isActive      Boolean      @default(true)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
@@ -40,5 +46,49 @@ model LessonPlan {
   @@index([authorId])
   @@index([subject])
   @@index([gradeLevel])
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  category    String
+  icon        String
+  topics      String[]
+  duration    String
+  level       String
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  text      String
+  author    String
+  rating    Int
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContentItem {
+  id          String   @id @default(uuid())
+  section     String   // e.g., "contact", "why_choose_us", "about_features", "hero_stats", "hero_highlights"
+  key         String?  // Optional key
+  title       String?  // Label, Title, or Text
+  subtitle    String?  // Description or Value
+  icon        String?
+  link        String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([section])
 }
 

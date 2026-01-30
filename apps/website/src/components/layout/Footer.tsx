@@ -1,10 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaFacebook, FaInstagram, FaYoutube, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import { scrollToSection } from '../../utils/helpers';
+import api from '../../lib/axios';
+
+interface FooterItem {
+  id: string;
+  title: string;
+  link: string;
+  order: number;
+}
 
 const Footer: React.FC = () => {
-  const quickLinks = ['Courses', 'About', 'Why Us', 'Contact'];
+  const [quickLinks, setQuickLinks] = useState<FooterItem[]>([]);
   const currentYear = new Date().getFullYear();
+  const defaultQuickLinks = ['Courses', 'About', 'Why Us', 'Contact'];
+
+  useEffect(() => {
+    const fetchFooterItems = async () => {
+      try {
+        const res = await api.get('/website-content/items?section=footer');
+        if (res.data && res.data.length > 0) {
+          setQuickLinks(res.data.sort((a: FooterItem, b: FooterItem) => a.order - b.order));
+        } else {
+          // Fallback
+          setQuickLinks(defaultQuickLinks.map((link, index) => ({
+            id: `default-${index}`,
+            title: link,
+            link: link === 'Why Us' ? 'why-us' : link.toLowerCase(),
+            order: index
+          })));
+        }
+      } catch (error) {
+        console.error('Failed to fetch footer items', error);
+         // Fallback
+         setQuickLinks(defaultQuickLinks.map((link, index) => ({
+          id: `default-${index}`,
+          title: link,
+          link: link === 'Why Us' ? 'why-us' : link.toLowerCase(),
+          order: index
+        })));
+      }
+    };
+    fetchFooterItems();
+  }, []);
 
   return (
     <footer className="bg-gray-900 text-white py-12">
@@ -22,13 +60,19 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link}>
+              {quickLinks.map((item) => (
+                <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(link === 'Why Us' ? 'why-us' : link.toLowerCase())}
+                    onClick={() => {
+                        if (item.link && item.link.startsWith('/')) {
+                            window.location.href = item.link;
+                        } else {
+                            scrollToSection(item.link || item.title.toLowerCase().replace(' ', '-'));
+                        }
+                    }}
                     className="text-gray-400 hover:text-primary-400 transition-colors duration-200"
                   >
-                    {link}
+                    {item.title}
                   </button>
                 </li>
               ))}
@@ -90,5 +134,6 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
+
 
 export default Footer;

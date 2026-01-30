@@ -90,7 +90,7 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
           <motion.form onSubmit={handleSubmit(onSubmit)} className="space-y-6" variants={staggerContainer}>
             <motion.div variants={staggerItem}>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                Email or Username
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -98,14 +98,14 @@ const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 </div>
                 <motion.input
                   id="email"
-                  type="email"
+                  type="text"
                   {...register('email')}
                   className={`block w-full pl-10 pr-3 py-3 border rounded-lg outline-none transition-all ${
                     errors.email 
                       ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
                       : 'border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
                   }`}
-                  placeholder="Enter your email"
+                  placeholder="Enter your email or username"
                   whileFocus={{ scale: 1.01 }}
                 />
               </div>

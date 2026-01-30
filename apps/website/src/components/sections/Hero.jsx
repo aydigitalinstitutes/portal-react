@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FaCheckCircle } from 'react-icons/fa';
-import { heroHighlights, heroStats } from '../../data/content';
+import { heroHighlights as defaultHeroHighlights, heroStats as defaultHeroStats } from '../../data/content';
 import { scrollToSection } from '../../utils/helpers';
 import { Section, Container } from '../common/Section';
 import AnimatedButton from '../common/AnimatedButton';
+import api from '../../lib/axios';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,50 @@ const Hero = () => {
   const highlightsRef = useRef(null);
   const buttonsRef = useRef(null);
   const statsRef = useRef(null);
+
+  const [highlights, setHighlights] = useState(defaultHeroHighlights);
+  const [stats, setStats] = useState(defaultHeroStats);
+  const [heroContent, setHeroContent] = useState({
+    titlePrefix: 'Learn Computer & Digital Skills — ',
+    titleSuffix: 'Become Job Ready',
+    subtitle: 'AY Digital Institute is a computer training center that helps students and professionals learn practical skills with projects, guidance, and career support.'
+  });
+
+  useEffect(() => {
+    const fetchHeroContent = async () => {
+      try {
+        const [highlightsRes, statsRes, contentRes] = await Promise.all([
+          api.get('/website-content/items?section=hero_highlights'),
+          api.get('/website-content/items?section=hero_stats'),
+          api.get('/website-content/items?section=hero_content')
+        ]);
+
+        if (highlightsRes.data && highlightsRes.data.length > 0) {
+           setHighlights(highlightsRes.data.sort((a, b) => a.order - b.order).map(item => item.title));
+        }
+
+        if (statsRes.data && statsRes.data.length > 0) {
+           setStats(statsRes.data.sort((a, b) => a.order - b.order).map(item => ({
+             value: item.subtitle, // subtitle used for value
+             label: item.title // title used for label
+           })));
+        }
+
+        if (contentRes.data && contentRes.data.length > 0) {
+          const newContent = { ...heroContent };
+          contentRes.data.forEach(item => {
+            if (item.key === 'hero_title_prefix') newContent.titlePrefix = item.title;
+            if (item.key === 'hero_title_suffix') newContent.titleSuffix = item.title;
+            if (item.key === 'hero_subtitle') newContent.subtitle = item.subtitle || item.title;
+          });
+          setHeroContent(newContent);
+        }
+      } catch (error) {
+        console.error("Failed to fetch hero content", error);
+      }
+    };
+    fetchHeroContent();
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -86,7 +131,7 @@ const Hero = () => {
             ref={titleRef}
             className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
           >
-            Learn Computer & Digital Skills —{' '}
+            {heroContent.titlePrefix}
             <motion.span
               className="text-primary-600 inline-block"
               animate={{
@@ -106,7 +151,7 @@ const Hero = () => {
                 backgroundClip: 'text',
               }}
             >
-              Become Job Ready
+              {heroContent.titleSuffix}
             </motion.span>
           </h1>
 
@@ -115,13 +160,12 @@ const Hero = () => {
             ref={subtitleRef}
             className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            AY Digital Institute is a computer training center that helps students and professionals
-            learn practical skills with projects, guidance, and career support.
+            {heroContent.subtitle}
           </p>
 
           {/* Highlights */}
           <div ref={highlightsRef} className="flex flex-wrap justify-center gap-4 mb-10">
-            {heroHighlights.map((highlight, index) => (
+            {highlights.map((highlight, index) => (
               <motion.div
                 key={index}
                 className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md border border-primary-100"
@@ -155,7 +199,7 @@ const Hero = () => {
 
           {/* Quick Stats */}
           <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-            {heroStats.map((stat, index) => (
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 className="bg-white p-6 rounded-xl shadow-lg border border-primary-100"

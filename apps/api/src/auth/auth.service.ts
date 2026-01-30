@@ -2,6 +2,9 @@ import {
   ForbiddenException,
   Injectable,
   UnauthorizedException,
+  ConflictException,
+  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -62,10 +65,18 @@ export class AuthService {
     email: string;
     name: string;
     password: string;
+    username?: string;
   }): Promise<AuthResult> {
     const existing = await this.usersRepo.findByEmail(dto.email);
     if (existing) {
       throw new ForbiddenException('Email is already registered');
+    }
+
+    if (dto.username) {
+        const existingUsername = await this.usersRepo.findByEmailOrUsername(dto.username);
+        if (existingUsername) {
+            throw new ForbiddenException('Username is already taken');
+        }
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
@@ -74,6 +85,7 @@ export class AuthService {
       email: dto.email,
       name: dto.name,
       passwordHash,
+      username: dto.username,
     });
 
     return this.issueTokensForUser({
@@ -85,7 +97,7 @@ export class AuthService {
   }
 
   async login(dto: { email: string; password: string }): Promise<AuthResult> {
-    const user = await this.usersRepo.findByEmail(dto.email);
+    const user = await this.usersRepo.findByEmailOrUsername(dto.email);
     if (!user || !user.passwordHash) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -238,5 +250,81 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async updateProfile(
+    userId: string,
+    dto: {
+      name?: string;
+      username?: string;
+      phoneNumber?: string;
+      dob?: string;
+      gender?: string;
+    },
+    file?: Express.Multer.File,
+  ) {
+    if (dto.username) {
+      const existing = await this.usersRepo.findByEmailOrUsername(dto.username);
+      if (existing && existing.id !== userId) {
+        throw new ConflictException('Username is already taken');
+      }
+    }
+
+    const updateData: any = { ...dto };
+    // Remove avatarUrl from dto if present, as we handle it separately via file upload
+    delete updateData.avatarUrl;
+
+    if (dto.dob) {
+      updateData.dob = new Date(dto.dob);
+    }
+
+    if (file) {
+      updateData.avatarData = file.buffer;
+      updateData.avatarMimeType = file.mimetype;
+    }
+
+    const updatedUser = await this.usersRepo.update(userId, updateData);
+    
+    // Construct avatar URL if avatar data exists
+    const avatarUrl = updatedUser.avatarData 
+      ? `/api/v1/auth/avatar/${updatedUser.id}` 
+      : null;
+
+    return {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      role: updatedUser.role,
+      username: updatedUser.username,
+      phoneNumber: updatedUser.phoneNumber,
+      dob: updatedUser.dob,
+      gender: updatedUser.gender,
+      avatarUrl,
+    };
+  }
+
+  async getAvatar(userId: string) {
+    const user = await this.usersRepo.findById(userId);
+    if (!user || !user.avatarData) {
+      throw new NotFoundException('Avatar not found');
+    }
+    return { buffer: user.avatarData, mimeType: user.avatarMimeType };
+  }
+
+  async changePassword(userId: string, dto: { currentPassword: string; newPassword: string }) {
+    const user = await this.usersRepo.findById(userId);
+    if (!user || !user.passwordHash) {
+      throw new BadRequestException('User has no password set or does not exist');
+    }
+
+    const ok = await bcrypt.compare(dto.currentPassword, user.passwordHash);
+    if (!ok) {
+      throw new ForbiddenException('Invalid current password');
+    }
+
+    const passwordHash = await bcrypt.hash(dto.newPassword, 10);
+    await this.usersRepo.update(userId, { passwordHash } as any);
+
+    return { success: true };
   }
 }

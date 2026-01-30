@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
-import { reviewsData } from '../../data/content';
+import { reviewsData as defaultReviews } from '../../data/content';
 import { Section, SectionTitle, SectionSubtitle, Container } from '../common/Section';
+import api from '../../lib/axios';
 
 const Reviews = () => {
+  const [reviews, setReviews] = useState(defaultReviews);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await api.get('/website-content/testimonials');
+        if (res.data && res.data.length > 0) {
+          setReviews(res.data);
+        }
+      } catch (e) {
+        console.error('Failed to fetch reviews', e);
+      }
+    };
+    fetchReviews();
+  }, []);
+
   return (
     <Section id="reviews" className="bg-gray-50 py-20">
       <Container>
@@ -13,7 +30,7 @@ const Reviews = () => {
         </SectionSubtitle>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviewsData.map((review, index) => (
+          {reviews.map((review, index) => (
             <div
               key={review.id}
               className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 scale-in"
