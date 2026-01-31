@@ -212,14 +212,14 @@ export class AuthService {
     res.cookie('accessToken', result.accessToken, {
       httpOnly: true,
       secure,
-      sameSite: 'strict',
+      sameSite: secure ? 'none' : 'lax',
       maxAge: this.accessTtlSeconds() * 1000,
     });
 
     const refreshOptions: any = {
       httpOnly: true,
       secure,
-      sameSite: 'strict',
+      sameSite: secure ? 'none' : 'lax',
     };
 
     if (result.isLongSession) {

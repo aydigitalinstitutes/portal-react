@@ -29,7 +29,26 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(helmet());
   app.enableCors({
-    origin: corsOrigins.length ? corsOrigins : true,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      // Allow explicitly defined origins
+      if (corsOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow all Vercel deployments
+      if (origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+
+      // Allow localhost
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+
+      callback(null, false);
+    },
     credentials: true,
   });
 

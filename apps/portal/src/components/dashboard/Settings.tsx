@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaUser, FaLock, FaCheck, FaSave, FaPalette } from "react-icons/fa";
+import { FaUser, FaLock, FaCheck, FaSave, FaPalette, FaGithub, FaGlobe, FaServer, FaCode } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useUI } from "../../context/UIContext";
 import AnimatedButton from "../common/AnimatedButton";
@@ -56,7 +56,7 @@ type ChangePasswordData = z.infer<typeof changePasswordSchema>;
 const Settings = () => {
   const { user, checkAuth } = useAuth();
   const { navColor, setNavColor } = useUI();
-  const [activeTab, setActiveTab] = useState<"profile" | "security" | "appearance">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "security" | "appearance" | "project">("profile");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [selectedFile] = useState<File | null>(null);
 
@@ -194,6 +194,17 @@ const Settings = () => {
                 <FaPalette className="mr-3 h-4 w-4" />
                 Appearance
               </button>
+              <button
+                onClick={() => setActiveTab("project")}
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === "project"
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <FaCode className="mr-3 h-4 w-4" />
+                Project & Deployment
+              </button>
             </nav>
           </motion.div>
         </div>
@@ -209,7 +220,9 @@ const Settings = () => {
                 ? "Profile Information"
                 : activeTab === "security"
                 ? "Security Settings"
-                : "Appearance Settings"}
+                : activeTab === "appearance"
+                ? "Appearance Settings"
+                : "Project & Deployment"}
             </h2>
 
             <AnimatePresence mode="wait">
@@ -462,6 +475,94 @@ const Settings = () => {
                   </AnimatedButton>
                 </div>
               </form>
+            ) : activeTab === "project" ? (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-md font-medium text-gray-900 mb-4 flex items-center gap-2">
+                    <FaGithub className="text-gray-700" /> Source Code
+                  </h3>
+                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <p className="text-sm text-gray-600 mb-2">
+                      The project source code is available on GitHub.
+                    </p>
+                    <a
+                      href="https://github.com/aydigitalinstitutes/portal-react"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2"
+                    >
+                      <FaGithub /> aydigitalinstitutes/portal-react
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-md font-medium text-gray-900 mb-4 flex items-center gap-2">
+                    <FaServer className="text-gray-700" /> Deployments
+                  </h3>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white rounded-md border border-gray-200 text-green-600">
+                          <FaGlobe />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">Website</p>
+                          <p className="text-xs text-gray-500">Production Environment</p>
+                        </div>
+                      </div>
+                      <a
+                        href="https://website-aydigital-new.vercel.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        Visit Site
+                      </a>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white rounded-md border border-gray-200 text-blue-600">
+                          <FaCode />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">Admin Portal</p>
+                          <p className="text-xs text-gray-500">Current Application</p>
+                        </div>
+                      </div>
+                      <a
+                        href="https://portal-chi-bice-54.vercel.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        Visit Portal
+                      </a>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-white rounded-md border border-gray-200 text-purple-600">
+                          <FaServer />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">Backend API</p>
+                          <p className="text-xs text-gray-500">NestJS Server</p>
+                        </div>
+                      </div>
+                      <a
+                        href="https://api-eight-rust-59.vercel.app/api/docs"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        API Docs
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ) : (
               <div className="space-y-6">
                 <div>

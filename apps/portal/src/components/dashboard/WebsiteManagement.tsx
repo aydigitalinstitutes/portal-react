@@ -478,7 +478,7 @@ const ItemModal = ({
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm({
+  } = useForm<any>({
     defaultValues: editingItem || {
       section:
         activeTab === "courses"
@@ -686,14 +686,14 @@ const ItemModal = ({
               {activeTab === "theme" && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {editingItem?.key === "primary_color"
+                    {(editingItem as any)?.key === "primary_color"
                       ? "Color Value"
-                      : editingItem?.key === "brand_logo"
+                      : (editingItem as any)?.key === "brand_logo"
                         ? "Logo URL"
                         : "Value"}
                   </label>
 
-                  {editingItem?.key === "primary_color" ? (
+                  {(editingItem as any)?.key === "primary_color" ? (
                     <div className="flex gap-4 items-center">
                       <input
                         type="color"
@@ -710,7 +710,7 @@ const ItemModal = ({
                     <input
                       {...register("subtitle")}
                       placeholder={
-                        editingItem?.key === "brand_logo"
+                        (editingItem as any)?.key === "brand_logo"
                           ? "https://example.com/logo.png"
                           : "Enter value"
                       }
@@ -725,7 +725,7 @@ const ItemModal = ({
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Value
                   </label>
-                  {editingItem?.key === "meta_description" ? (
+                  {(editingItem as any)?.key === "meta_description" ? (
                     <textarea
                       {...register("subtitle")}
                       rows={4}

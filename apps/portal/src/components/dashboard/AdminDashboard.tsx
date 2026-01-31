@@ -24,7 +24,7 @@ import { useState } from "react";
 import StudentOverview from "./StudentOverview";
 import Settings from "./Settings";
 import WebsiteManagement from "./WebsiteManagement";
-import { User } from "../../context/AuthContext";
+import type { User } from "../../context/AuthContext";
 
 const SidebarContent = ({
   user,

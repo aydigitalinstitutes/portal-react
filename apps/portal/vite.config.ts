@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // @ts-expect-error - Vite plugin type mismatch
   plugins: [react()],
   resolve: {
     alias: {

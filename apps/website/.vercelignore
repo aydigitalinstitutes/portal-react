@@ -12,3 +12,4 @@ supabase/
 *.tar.gz
 *.dump
 backups/
+.git
